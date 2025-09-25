@@ -57,7 +57,6 @@ class Usuario extends ActivaModelo {
         self::$errores[] = "Usuario inválido o sin contraseña";
         return false;
     }
-        echo $this->password."".$usuario->password."";
 
     // Verificamos el password usando password_verify
     if (password_verify($this->password, $usuario->password)) {

@@ -9,6 +9,12 @@ class ConvocatoriaController{
             'convocatoria' => $convocatoria
         ]);
     }
+    public static function IndexUser(Router $router){   
+        $convocatoria =Convocatoria::listar();
+        $router->render('user/convocatoria/index',[
+            'convocatoria' => $convocatoria
+        ]);
+    }
 }
 
 ?>

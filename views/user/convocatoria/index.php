@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Empresa</title>
+    <title>Convocatorias</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -44,46 +44,47 @@
         .card:hover {
             transform: translateY(-5px);
         }
+
+        .estado-abierta { background-color: #d1fae5; color: #065f46; }
+        .estado-cerrada { background-color: #fee2e2; color: #991b1b; }
+        .estado-cancelada { background-color: #e5e7eb; color: #374151; }
     </style>
 </head>
 
-<body class="bg-color-5 p-6">
-
+<body class="bg-color-5">
 <section class="relative text-white bg-color-2 text-center h-[200px] bg-fixed bg-cover bg-center mb-10">
     <div class="relative z-10 max-w-3xl mx-auto px-6 flex flex-col justify-center h-full">
-        <h2 class="text-4xl sm:text-5xl font-bold mb-2 text-color-4">Empresas</h2>
-        <p class="text-color-4 text-lg">Gestiona y visualiza la información de tus empresas de forma sencilla</p>
+        <h2 class="text-4xl sm:text-5xl font-bold mb-2 text-color-4 ">Convocatoria</h2>
     </div>
 </section>
 
-<!-- Grid con pequeño padding lateral -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-8">
-    <?php foreach($empresa as $e): ?>
+<!-- Contenedor centrado con padding -->
+<!-- Grid con un pequeño padding a los lados -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-8">
+    <?php foreach ($convocatoria as $c): ?>
     <div class="card rounded-xl shadow-md overflow-hidden hover-shadow-md">
-        <!-- Imagen de la empresa -->
-        <?php if(!empty($e['imagen'])): ?>
-        <img src="<?= $e['imagen'] ?>" alt="<?= $e['nombre_empresa'] ?>" class="w-full h-52 object-cover">
+        <?php if(!empty($c['imagen'])): ?>
+        <img src="<?= $c['imagen'] ?>" alt="<?= $c['titulo'] ?>" class="w-full h-48 object-cover">
         <?php else: ?>
-        <div class="w-full h-52 bg-gray-200 flex items-center justify-center text-gray-500">
+        <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
             Sin imagen
         </div>
         <?php endif; ?>
-
-        <!-- Información de la empresa -->
         <div class="p-4">
-            <h2 class="text-xl font-semibold mb-2"><?= $e['nombre_empresa'] ?></h2>
-            <p class="text-color-3 mb-1"><strong>Rubro:</strong> <?= $e['rubro'] ?></p>
-            <p class="text-color-3 mb-1"><strong>Dirección:</strong> <?= $e['direccion'] ?></p>
-            <p class="text-color-3 mb-1"><strong>Representante:</strong> <?= $e['representante'] ?> (<?= $e['cargo_representante'] ?>)</p>
-            <p class="text-color-3 mb-1"><strong>Email:</strong> <?= $e['email'] ?></p>
-            <p class="text-color-3 mb-1"><strong>Teléfono:</strong> <?= $e['telefono'] ?></p>
-            <p class="mt-3 text-sm <?= $e['verificada'] ? 'text-green-600' : 'text-red-600' ?>">
-                <?= $e['verificada'] ? 'Verificada' : 'No verificada' ?>
-            </p>
+            <h2 class="text-xl font-semibold mb-2"><?= $c['titulo'] ?></h2>
+            <p class="mb-1"><strong>Empresa:</strong> <?= $c['nombre_empresa'] ?? $c['id_empresa'] ?></p>
+            <p class="mb-1"><?= strlen($c['descripcion'])>100 ? substr($c['descripcion'],0,100)."..." : $c['descripcion'] ?></p>
+            <p class="text-sm mb-1"><strong>Requisitos:</strong> <?= $c['requisitos'] ?></p>
+            <p class="text-sm mb-2"><strong>Publicación:</strong> <?= $c['fecha_publicacion'] ?> |
+                <strong>Cierre:</strong> <?= $c['fecha_cierre'] ?></p>
+            <span class="inline-block px-3 py-1 text-sm font-medium rounded-full <?= $c['estado']==='abierta'?'estado-abierta':($c['estado']==='cerrada'?'estado-cerrada':'estado-cancelada') ?>">
+                <?= ucfirst($c['estado']) ?>
+            </span>
         </div>
     </div>
     <?php endforeach; ?>
 </div>
 
 </body>
+
 </html>
