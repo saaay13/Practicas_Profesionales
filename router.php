@@ -37,10 +37,20 @@ class Router
     foreach ($datos as $key => $value) {
         $$key = $value;
     }
-    include __DIR__ ."/views/{$ubicacion}.php";
-    $contenido=ob_get_clean();
-    include __DIR__ ."/views/layout.php";
+
+    // Sin layout
+    if ($ubicacion === 'login') {
+        include __DIR__ . "/views/{$ubicacion}.php";
+        ob_end_flush();
+        return;
     }
+
+    // con layout
+    include __DIR__ . "/views/{$ubicacion}.php";
+    $contenido = ob_get_clean();
+    include __DIR__ . "/views/layout.php";
+}
+
     
 }
 ?>

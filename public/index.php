@@ -10,18 +10,22 @@ use Controllers\PostulacionController;
 use Controllers\PracticaController;
 use Controllers\RolController;
 use Controllers\UsuarioController;
-use Controllers\AuthController;
 use Controllers\ContactoController;
+use Controllers\LoginController;
+
 use MVC\Router;
 $router=new Router();   
 
 $router->get('/', [EmpresaController::class,'IndexUser']);
 $router->get("/contacto", [ContactoController::class, "Index"]);
 $router->get("/nosotros", [UsuarioController::class,"Nosotros"]);
+ 
+$router->get('/login', [LoginController::class,'login']);
+$router->post('/login', [LoginController::class,'login']);
 
-$router->get('/login', [AuthController::class, 'loginForm']);
-$router->post('/login', [AuthController::class, 'login']);
-$router->get('/logout', [AuthController::class, 'logout']);
+
+//$router->get('/login', [AuthController::class, 'loginForm']);
+//$router->post('/login', [AuthController::class, 'login']);
 $router->get('/empresa/panel', [EmpresaController::class, 'Public']);
 
 $router->get('/rol', [RolController::class, 'Index']);
