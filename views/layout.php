@@ -77,7 +77,7 @@ $links = [
         <?php else: ?>
             <a href="/empresa/panel" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Empresa</a>
             <a href="/user/convocatoria" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Convocatorias</a>
-            <a href="/contacto" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Contacto</a>
+            <a href="/contacto/crear" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Contacto</a>
             <a href="/nosotros" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Nosotros</a>
             <a href="/login" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Login</a>
         <?php endif; ?>

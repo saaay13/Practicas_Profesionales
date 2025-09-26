@@ -16,7 +16,8 @@ $router=new Router();
 //Sin Authenticar
 $router->get('/', [EmpresaController::class,'IndexUser']);
 $router->get("/mensaje/index", [ContactoController::class, "Index"]);
-$router->post("/contacto", [ContactoController::class, "Crear"]);
+$router->get('/contacto/crear', [ContactoController::class, 'Crear']);
+$router->post('/contacto/crear', [ContactoController::class, 'Crear']);
 
 $router->get("/nosotros", [UsuarioController::class,"Nosotros"]);
 $router->get('/empresa/panel', [EmpresaController::class, 'Public']);

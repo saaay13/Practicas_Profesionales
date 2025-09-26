@@ -11,11 +11,11 @@ class EmpresaController{
         ]);
     }
     public static function IndexUser(Router $router){   
-        $empresas = Empresa::listar();
-        $convocatorias = Convocatoria::listar();
+        $empresa = Empresa::listarConUsuario();
+        $convocatoria = Convocatoria::listar();
         $router->render("user/inicio/index", [
-            'empresas' => $empresas,
-            'convocatorias' => $convocatorias
+            'empresa' => $empresa,
+            'convocatoria' => $convocatoria
         ]);
     }
      public static function Public(Router $router){  

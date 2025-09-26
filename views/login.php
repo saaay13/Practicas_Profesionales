@@ -24,6 +24,9 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
         .text-color-1 { color: var(--color-1); }
         .text-color-4 { color: var(--color-4); }
+        .text-color-2 { color: var(--color-2); }
+        .text-color-3 { color: var(--color-3); }
+        .text-color-5 { color: var(--color-5); }
         .hover-bg-color-2:hover { background-color: var(--color-2); }
         .hover-bg-color-3:hover { background-color: var(--color-3); }
         .hover-text-color-4:hover { color: var(--color-4); }
@@ -67,7 +70,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
         </div>
 
         <button type="submit"
-                class="w-full py-2 bg-color-3 text-white rounded-md font-semibold hover-bg-color-2 transition duration-300">
+                class="w-full py-2 bg-color-3 text-color-5 rounded-md font-semibold hover-bg-color-2 transition duration-300">
             Ingresar
         </button>
     </form>
