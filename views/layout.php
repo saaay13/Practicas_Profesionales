@@ -9,6 +9,7 @@ $links = [
         ['url'=>'/practica','label'=>'Prácticas'],
         ['url'=>'/postulacion','label'=>'Postulaciones'],
         ['url'=>'/asistencia','label'=>'Asistencia'],
+        ['url'=>'/mensaje/index','label'=>'Mesaje'],
     ],
     2 => [
         ['url'=>'/empresa/panel','label'=>'Mi Panel'],
@@ -52,8 +53,8 @@ $links = [
 <nav class="gradient-color text-color-5 shadow-md">
 <div class="w-full mx-0 px-9 flex items-center justify-between h-24">
     <div class="flex items-center space-x-3">
-        <a href="/"><img src="/ruta/a/tu/logo.png" alt="Logo" class="h-12 w-12 object-contain"></a>
-        <a href="/" class="text-2xl font-bold tracking-wide hover-text-color-4 transition duration-300">PracTIca</a>
+        <a href="/"><img src="/img/logoSF.png" alt="Logo" class="h-10 w-10 object-contain"></a>
+        <a href="/" class="text-2xl font-bold tracking-wide text-color-4 hover-text-color-5 transition duration-300">PracTIca</a>
     </div>
 
     <div class="hidden md:flex ml-10 space-x-4">

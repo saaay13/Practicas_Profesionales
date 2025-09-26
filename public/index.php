@@ -15,7 +15,9 @@ use MVC\Router;
 $router=new Router();   
 //Sin Authenticar
 $router->get('/', [EmpresaController::class,'IndexUser']);
-$router->get("/contacto", [ContactoController::class, "Index"]);
+$router->get("/mensaje/index", [ContactoController::class, "Index"]);
+$router->post("/contacto", [ContactoController::class, "Crear"]);
+
 $router->get("/nosotros", [UsuarioController::class,"Nosotros"]);
 $router->get('/empresa/panel', [EmpresaController::class, 'Public']);
 $router->get('/user/convocatoria', [ConvocatoriaController::class, 'IndexUser']);
@@ -38,8 +40,15 @@ $router->get('/practica', [PracticaController::class, 'Index']);
 $router->get('/postulacion', [PostulacionController::class, 'Index']);
 $router->get('/estudiante', [EstudianteController::class, 'Index']);
 $router->get('/empresa', [EmpresaController::class, 'Index']);
+$router->get('/empresa/crear', [EmpresaController::class, 'Crear']);
+$router->post('/empresa/crear', [EmpresaController::class, 'Crear']);
+
 $router->get('/egresado', [EgresadoController::class, 'Index']);
+
 $router->get('/convocatoria', [ConvocatoriaController::class, 'Index']);
+$router->get('/convocatoria/crear', [ConvocatoriaController::class, 'Crear']);
+$router->post('/convocatoria/crear', [ConvocatoriaController::class, 'Crear']);
+
 $router->get('/asistencia', [AsistenciaController::class, 'Index']);
 
 $router->ComprobarRutas();

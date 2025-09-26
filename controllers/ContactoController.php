@@ -10,7 +10,7 @@ class ContactoController
     public static function Index(Router $router)
     {
         $contactos = Contacto::listar();
-        $router->render('user/contacto/index', [
+        $router->render('mensaje/index', [
             'contactos' => $contactos
         ]);
     }

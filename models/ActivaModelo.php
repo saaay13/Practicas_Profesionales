@@ -29,6 +29,47 @@ class ActivaModelo{
     }
     return $datos;
     }
+public static function listarConRol() {
+    $query = "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.telefono,
+                     r.nombre_rol
+              FROM usuario u
+              JOIN rol r ON u.id_rol = r.id_rol
+              ORDER BY u.id_usuario ASC"; 
+              
+    $resultado = self::$db->query($query);
+    $datos = [];
+    if ($resultado) {
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
+    }
+    return $datos;
+}
+
+public static function listarConEmpresa() {
+    $query = "SELECT c.id_convocatoria,
+                     c.titulo,
+                     c.descripcion,
+                     c.requisitos,
+                     c.fecha_publicacion,
+                     c.fecha_cierre,
+                     c.estado,
+                     e.nombre_empresa
+              FROM convocatoria c
+              JOIN empresa e ON c.id_empresa = e.id_empresa
+              ORDER BY c.id_convocatoria ASC";
+
+    $resultado = self::$db->query($query);
+    $datos = [];
+    if ($resultado) {
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
+    }
+    return $datos;
+}
+
+
+
+
+
+
      public function crear()
     {
        $atributos = $this->pasar();
@@ -51,6 +92,7 @@ class ActivaModelo{
         return $resultado;
     }
     
+
     
     
     

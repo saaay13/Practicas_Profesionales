@@ -10,7 +10,7 @@ class UsuarioController {
 
     public static function Index(Router $router) {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        $usuario = Usuario::listar();
+        $usuario = Usuario::listarConRol();
         $router->render('usuario/index', [
             'usuario' => $usuario
         ]);
@@ -19,18 +19,23 @@ class UsuarioController {
     public static function Crear(Router $router) {
         if (session_status() === PHP_SESSION_NONE) session_start();
         //\verificarRol([1]); 
-
-
         $usuario = new Usuario();
 
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            $usuario = new Usuario($_POST['usuario']);
-            $resultado = $usuario->crear();
-            if ($resultado) {
-                header('Location: /usuario');
-                exit;
-            }
-        }
+    $usuario = new Usuario($_POST['usuario']);
+
+    // Eliminar atributo que no existe en la tabla
+    if (isset($usuario->autenticado)) {
+        unset($usuario->autenticado);
+    }
+
+    $resultado = $usuario->crear();
+    if ($resultado) {
+        header('Location: /usuario');
+        exit;
+    }
+}
+
 
         $rol = Rol::listar();
         $router->render('usuario/crear', [

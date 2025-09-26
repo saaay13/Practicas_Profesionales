@@ -44,5 +44,11 @@ class Convocatoria extends ActivaModelo {
     public function cambiarEstado(EstadoConvocatoria $nuevoEstado) {
         $this->estado = $nuevoEstado;
     }
+    public function setImagen ($imagen){
+        {
+            $this->imagen = $imagen;
+        }
+
+    }
 }
 ?>

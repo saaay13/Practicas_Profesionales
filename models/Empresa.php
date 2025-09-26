@@ -9,7 +9,7 @@ class Empresa extends ActivaModelo {
         'nit',
         'rubro',
         'direccion',
-        'representante',
+        'id_representante',
         'cargo_representante',
         'verificada',
         'imagen'
@@ -20,7 +20,7 @@ class Empresa extends ActivaModelo {
     public $nit;
     public $rubro;
     public $direccion;
-    public $representante;
+    public $id_representante;
     public $cargo_representante;
     public $verificada;
     public $imagen;
@@ -30,10 +30,16 @@ class Empresa extends ActivaModelo {
         $this->nit = $args['nit'] ?? null;
         $this->rubro = $args['rubro'] ?? null;
         $this->direccion = $args['direccion'] ?? null;
-        $this->representante = $args['representante'] ?? null;
+        $this->id_representante = $args['id_representante'] ?? null;
         $this->cargo_representante = $args['cargo_representante'] ?? null;
         $this->verificada = $args['verificada'] ?? false;
         $this->imagen = $args['imagen'] ?? null;
+
+    }
+    public function setImagen ($imagen){
+        {
+            $this->imagen = $imagen;
+        }
 
     }
 }

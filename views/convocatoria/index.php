@@ -1,54 +1,86 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convocatorias</title>
+    <title>Gestión de Convocatorias</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --color-1: #000a23;
+            --color-2: #02253d;
+            --color-3: #153f59;
+            --color-4: #94b8d7;
+            --color-5: #cbd5e1;
+        }
+    </style>
 </head>
 
-<body class="p-6 bg-gray-50">
-    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Convocatorias</h1>
+<body class="bg-[var(--color-5)] min-h-screen">
+    <main class="w-full px-6 py-10">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-[var(--color-2)]">Gestión de Convocatorias</h2>
+            <a href="/convocatoria/crear"
+               class="bg-[var(--color-2)] text-white px-6 py-3 rounded-lg shadow hover:bg-[var(--color-3)] transition duration-300">
+                + Nueva Convocatoria
+            </a>
+        </div>
 
-    <div class="flex justify-end mb-4">
-        <a href="/convocatoria/crear" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
-            Nueva Convocatoria
-        </a>
-    </div>
-
-    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table class="table-auto w-full text-sm text-gray-700">
-            <thead class="bg-gray-100 text-gray-900">
-                <tr>
-                    <th class="p-3 border-b">ID</th>
-                    <th class="p-3 border-b">Empresa</th>
-                    <th class="p-3 border-b">Título</th>
-                    <th class="p-3 border-b">Descripción</th>
-                    <th class="p-3 border-b">Requisitos</th>
-                    <th class="p-3 border-b">Fecha Publicación</th>
-                    <th class="p-3 border-b">Fecha Cierre</th>
-                    <th class="p-3 border-b">Estado</th>
-                    <th class="p-3 border-b">Imagen</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($convocatoria as $c): ?>
-                <tr class="hover:bg-gray-50">
-                    <td class="border-b p-3"><?= $c['id_convocatoria'] ?></td>
-                    <td class="border-b p-3"><?= $c['nombre_empresa'] ?? $c['id_empresa'] ?></td>
-                    <td class="border-b p-3"><?= $c['titulo'] ?></td>
-                    <td class="border-b p-3"><?= $c['descripcion'] ?></td>
-                    <td class="border-b p-3"><?= $c['requisitos'] ?></td>
-                    <td class="border-b p-3"><?= $c['fecha_publicacion'] ?></td>
-                    <td class="border-b p-3"><?= $c['fecha_cierre'] ?></td>
-                    <td class="border-b p-3"><?= ucfirst($c['estado']) ?></td>
-                    <td class="border-b p-3"><?= $c['imagen'] ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+        <div class="overflow-x-auto bg-white shadow-lg rounded-xl border border-[var(--color-4)]">
+            <table class="table-auto w-full text-sm text-gray-700">
+                <thead class="bg-[var(--color-3)] text-white">
+                    <tr>
+                        <th class="p-4 text-left">ID</th>
+                        <th class="p-4 text-left">Empresa</th>
+                        <th class="p-4 text-left">Título</th>
+                        <th class="p-4 text-left">Descripción</th>
+                        <th class="p-4 text-left">Requisitos</th>
+                        <th class="p-4 text-left">Fecha Publicación</th>
+                        <th class="p-4 text-left">Fecha Cierre</th>
+                        <th class="p-4 text-left">Estado</th>
+                        <th class="p-4 text-left">Imagen</th>
+                        <th class="p-4 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($convocatoria as $c): ?>
+                    <tr class="border-b hover:bg-[var(--color-5)] transition">
+                        <td class="p-4"><?= $c['id_convocatoria'] ?></td>
+                        <td class="p-4 font-medium text-[var(--color-1)]"><?= $c['nombre_empresa'] ?? $c['id_empresa'] ?></td>
+                        <td class="p-4"><?= $c['titulo'] ?></td>
+                        <td class="p-4"><?= $c['descripcion'] ?></td>
+                        <td class="p-4"><?= $c['requisitos'] ?></td>
+                        <td class="p-4"><?= $c['fecha_publicacion'] ?></td>
+                        <td class="p-4"><?= $c['fecha_cierre'] ?></td>
+                        <td class="p-4"><?= ucfirst($c['estado']) ?></td>
+                        <td class="p-4">
+                            <?php if (!empty($c['imagen'])): ?>
+                                <img src="/img/<?= $c['imagen'] ?>" class="h-16 w-16 object-cover rounded-md mx-auto">
+                            <?php else: ?>
+                                Sin imagen
+                            <?php endif; ?>
+                        </td>
+                        <td class="p-4 text-center flex gap-2 justify-center">
+                            <a href="/convocatoria/editar?id=<?= $c['id_convocatoria'] ?>" 
+                               class="px-3 py-1 bg-[var(--color-4)] text-[var(--color-1)] rounded-md hover:bg-[var(--color-2)] hover:text-white transition">
+                               Editar
+                            </a>
+                            <a href="/convocatoria/eliminar?id=<?= $c['id_convocatoria'] ?>" 
+                               class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+                               onclick="return confirm('¿Seguro que deseas eliminar esta convocatoria?')">
+                               Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </main>
 </body>
 
 </html>
