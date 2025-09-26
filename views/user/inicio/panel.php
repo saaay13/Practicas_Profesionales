@@ -74,12 +74,6 @@
             <h2 class="text-xl font-semibold mb-2"><?= $e['nombre_empresa'] ?></h2>
             <p class="text-color-3 mb-1"><strong>Rubro:</strong> <?= $e['rubro'] ?></p>
             <p class="text-color-3 mb-1"><strong>Dirección:</strong> <?= $e['direccion'] ?></p>
-            <p class="text-color-3 mb-1"><strong>Representante:</strong> <?= $e['nombre'] ?> (<?= $e['cargo_representante'] ?>)</p>
-            <p class="text-color-3 mb-1"><strong>Email:</strong> <?= $e['email'] ?></p>
-            <p class="text-color-3 mb-1"><strong>Teléfono:</strong> <?= $e['telefono'] ?></p>
-            <p class="mt-3 text-sm <?= $e['verificada'] ? 'text-green-600' : 'text-red-600' ?>">
-                <?= $e['verificada'] ? 'Verificada' : 'No verificada' ?>
-            </p>
         </div>
     </div>
     <?php endforeach; ?>

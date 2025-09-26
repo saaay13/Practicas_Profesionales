@@ -1,62 +1,91 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Usuario</title>
+    <title>Crear Usuario - Administrador</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --color-1: #000a23;
+            --color-2: #02253d;
+            --color-3: #153f59;
+            --color-4: #94b8d7;
+            --color-5: #cbd5e1;
+        }
+        .text-color-1 { color: var(--color-1); }
+        .text-color-2 { color: var(--color-2); }
+        .text-color-3 { color: var(--color-3); }
+        .text-color-4 { color: var(--color-4); }
+        .text-color-5 { color: var(--color-5); }
+        .bg-color-1 { background-color: var(--color-1); }
+        .bg-color-2 { background-color: var(--color-2); }
+        .bg-color-3 { background-color: var(--color-3); }
+        .bg-color-4 { background-color: var(--color-4); }
+        .bg-color-5 { background-color: var(--color-5); }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-6 text-center">Crear Usuario</h1>
-        <form action="" method="POST" enctype="multipart/form-data" class="space-y-4">
-            
+<body class="bg-color-5 min-h-screen flex items-center justify-center px-6">
+<div class="bg-color-5 p-10 rounded-xl shadow-lg w-full max-w-5xl border border-color-3 mx-auto mt-16">
+        <h1 class="text-3xl font-bold mb-8 text-center text-color-1">Crear Usuario</h1>
+        <form action="" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
             <div>
-                <label for="nombre" class="block font-medium mb-1">Nombre:</label>
+                <label for="nombre" class="block font-medium mb-1 text-color-2">Nombre:</label>
                 <input type="text" id="nombre" name="usuario[nombre]" required
-                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full border border-color-3 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-2 bg-color-5 text-color-1">
             </div>
 
             <div>
-                <label for="apellido" class="block font-medium mb-1">Apellido:</label>
+                <label for="apellido" class="block font-medium mb-1 text-color-2">Apellido:</label>
                 <input type="text" id="apellido" name="usuario[apellido]" required
-                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full border border-color-3 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-2 bg-color-5 text-color-1">
             </div>
 
             <div>
-                <label for="email" class="block font-medium mb-1">Email:</label>
+                <label for="email" class="block font-medium mb-1 text-color-2">Email:</label>
                 <input type="email" id="email" name="usuario[email]" required
-                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full border border-color-3 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-2 bg-color-5 text-color-1">
             </div>
 
             <div>
-                <label for="password" class="block font-medium mb-1">Contraseña:</label>
+                <label for="password" class="block font-medium mb-1 text-color-2">Contraseña:</label>
                 <input type="password" id="password" name="usuario[password]" required
-                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full border border-color-3 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-2 bg-color-5 text-color-1">
             </div>
 
             <div>
-                <label for="telefono" class="block font-medium mb-1">Teléfono:</label>
+                <label for="telefono" class="block font-medium mb-1 text-color-2">Teléfono:</label>
                 <input type="text" id="telefono" name="usuario[telefono]"
-                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full border border-color-3 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-2 bg-color-5 text-color-1">
             </div>
 
             <div>
-                <label for="id_rol" class="block font-medium mb-1">Rol:</label>
+                <label for="id_rol" class="block font-medium mb-1 text-color-2">Rol:</label>
                 <select id="id_rol" name="usuario[id_rol]" required
-                        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full border border-color-3 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-2 bg-color-5 text-color-1">
                     <option value="">Seleccione un rol</option>
                     <?php foreach ($rol as $r): ?>
-                        <option value="<?= $r['id_rol'] ?>"><?= $r['nombre_rol'] ?></option>
+                        <option value="<?= $r['id_rol'] ?>" <?= $r['nombre_rol'] === 'Administrador' ? 'selected' : '' ?>>
+                            <?= $r['nombre_rol'] ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
-            <button type="submit"
-                    class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition-colors">
-                Crear Usuario
-            </button>
+            <div class="md:col-span-2">
+                <button type="submit"
+                        class="w-full bg-color-2 text-color-5 font-bold py-3 rounded-lg hover:bg-color-3 transition-colors">
+                    Crear Usuario
+                </button>
+            </div>
         </form>
     </div>
 </body>
+
 </html>

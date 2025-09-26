@@ -1,7 +1,8 @@
 <?php
 namespace Controllers;
 use Model\Convocatoria;
-use Model\Empresa; 
+use Model\Empresa;
+use Model\Usuario;
 use MVC\Router;
 class EmpresaController{
     public static function Index(Router $router){   
@@ -20,7 +21,7 @@ class EmpresaController{
     }
      public static function Public(Router $router){  
         $empresa = Empresa::listarConUsuario();
-        $router->render('empresa/panel',[
+        $router->render('user/inicio/panel',[
             'empresa' => $empresa
         ]);
     }
@@ -41,9 +42,10 @@ class EmpresaController{
             exit;
         }
     }
-
+    $usuario=Usuario::listar() ;
     $router->render('empresa/crear', [
-        'empresa' => $empresa
+        'empresa' => $empresa,
+        'usuario'=> $usuario
     ]);
 }
 }

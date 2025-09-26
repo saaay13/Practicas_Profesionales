@@ -1,6 +1,7 @@
 <?php
 namespace Controllers;
-use Model\Convocatoria; 
+use Model\Convocatoria;
+use Model\Empresa;
 use MVC\Router;
 class ConvocatoriaController{
     public static function Index(Router $router){   
@@ -10,7 +11,7 @@ class ConvocatoriaController{
         ]);
     }
     public static function IndexUser(Router $router){   
-        $convocatoria =Convocatoria::listar();
+        $convocatoria =Convocatoria::listarConEmpresa();
         $router->render('user/convocatoria/index',[
             'convocatoria' => $convocatoria
         ]);
@@ -34,9 +35,10 @@ class ConvocatoriaController{
             exit;
         }
     }
-
+    $empresa=Empresa::listar() ;
     $router->render('convocatoria/crear', [
-        'convocatoria' => $convocatoria
+        'convocatoria' => $convocatoria,
+        'empresa'=> $empresa
     ]);
 }
 }

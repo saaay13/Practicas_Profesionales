@@ -9,6 +9,7 @@ require_once __DIR__ . '/../includes/auth.php';
 class UsuarioController {
 
     public static function Index(Router $router) {
+        \verificarRol([1]); 
         if (session_status() === PHP_SESSION_NONE) session_start();
         $usuario = Usuario::listarConRol();
         $router->render('usuario/index', [
@@ -35,8 +36,6 @@ class UsuarioController {
         exit;
     }
 }
-
-
         $rol = Rol::listar();
         $router->render('usuario/crear', [
             'usuario' => $usuario,

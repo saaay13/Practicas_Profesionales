@@ -29,17 +29,29 @@ class Convocatoria extends ActivaModelo {
     public $fecha_cierre;
     public EstadoConvocatoria $estado;
     public $imagen ;
-
-    public function __construct($args = []) {
+      public function __construct($args = []) {
         $this->id_empresa = $args['id_empresa'] ?? null;
         $this->titulo = $args['titulo'] ?? null;
         $this->descripcion = $args['descripcion'] ?? null;
         $this->requisitos = $args['requisitos'] ?? null;
         $this->fecha_publicacion = $args['fecha_publicacion'] ?? date("Y-m-d");
         $this->fecha_cierre = $args['fecha_cierre'] ?? null;
-        $this->estado = $args['estado'] ?? EstadoConvocatoria::ABIERTA;
+
+        // ✅ conversión segura de string a enum
+        if (isset($args['estado'])) {
+            if ($args['estado'] instanceof EstadoConvocatoria) {
+                $this->estado = $args['estado']; // ya es enum
+            } else {
+                $this->estado = EstadoConvocatoria::tryFrom((string)$args['estado']) 
+                    ?? EstadoConvocatoria::ABIERTA;
+            }
+        } else {
+            $this->estado = EstadoConvocatoria::ABIERTA;
+        }
+
         $this->imagen = $args['imagen'] ?? null;
     }
+
 
     public function cambiarEstado(EstadoConvocatoria $nuevoEstado) {
         $this->estado = $nuevoEstado;

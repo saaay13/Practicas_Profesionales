@@ -1,3 +1,8 @@
+<?php 
+if (session_status() === PHP_SESSION_NONE) session_start();
+$usuario = $_SESSION["nombre"] ?? '';
+$id_usuario = $_SESSION["id_usuario"] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -60,35 +65,32 @@
 
             <!-- Formulario grande -->
             <section class="bg-white shadow-2xl rounded-2xl p-8 border border-gray-200 w-full">
-                <form action="/contacto" method="POST" class="space-y-6">
-                    <div>
-                        <label for="nombre" class="block text-sm font-medium">Nombre</label>
-                        <input type="text" name="contacto[nombre]" id="nombre"
-                            class="mt-1 block w-full rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:border-2 focus:ring-offset-0 text-lg"
-                            placeholder="Tu nombre completo" required>
-                    </div>
+                <form action="" method="POST" class="space-y-6">
 
-                    <div>
-                        <label for="correo" class="block text-sm font-medium">Correo</label>
-                        <input type="email" name="contacto[correo]" id="correo"
-                            class="mt-1 block w-full rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:border-2 focus:ring-offset-0 text-lg"
-                            placeholder="ejemplo@correo.com" required>
-                    </div>
+    <input type="hidden" name="contacto[id_usuario]" value="<?= htmlspecialchars($id_usuario) ?>">
 
-                    <div>
-                        <label for="mensaje" class="block text-sm font-medium">Mensaje</label>
-                        <textarea name="contacto[mensaje]" id="mensaje" rows="6"
-                            class="mt-1 block w-full rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:border-2 focus:ring-offset-0 text-lg"
-                            placeholder="Escribe tu mensaje aquí..." required></textarea>
-                    </div>
+    <div>
+        <label for="nombre" class="block text-sm font-medium">Nombre</label>
+        <input type="text" name="contacto[nombre_mostrar]" id="nombre"
+            value="<?= htmlspecialchars($usuario) ?>"
+            class="mt-1 block w-full rounded-xl shadow-sm px-5 py-3 focus:ring-2 focus:ring-offset-0 text-lg"
+            placeholder="Tu nombre completo" required readonly>
+    </div>
 
-                    <div class="text-center">
-                        <button type="submit"
-                            class="btn-enviar text-white font-semibold py-4 px-10 rounded-full shadow-lg text-lg transition-all">
-                            Enviar Mensaje
-                        </button>
-                    </div>
-                </form>
+    <div>
+        <label for="mensaje" class="block text-sm font-medium">Mensaje</label>
+        <textarea name="contacto[mensaje]" id="mensaje" rows="6"
+            class="mt-1 block w-full rounded-lg shadow-sm px-4 py-3 focus:ring-2 focus:border-2 focus:ring-offset-0 text-lg"
+            placeholder="Escribe tu mensaje aquí..." required></textarea>
+    </div>
+
+    <div class="text-center">
+        <button type="submit"
+            class="btn-enviar text-white font-semibold py-4 px-10 rounded-full shadow-lg text-lg transition-all">
+            Enviar Mensaje
+        </button>
+    </div>
+</form>
             </section>
 
             <!-- Mapa de ubicación grande -->

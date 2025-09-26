@@ -19,7 +19,13 @@ $links = [
     3 => [
         ['url'=>'/convocatoria','label'=>'Convocatorias'],
         ['url'=>'/postulaciones','label'=>'Mis Postulaciones'],
+    ],
+    4 => [
+        ['url'=>'/convocatoria','label'=>'Convocatorias'],
+        ['url'=>'/postulaciones','label'=>'Mis Postulaciones'],
+
     ]
+    
 ];
 ?>
 
@@ -59,7 +65,6 @@ $links = [
 
     <div class="hidden md:flex ml-10 space-x-4">
         <a href="/" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Inicio</a>
-
         <?php if (!empty($_SESSION["login"])): ?>
             <?php 
             if ($rol && isset($links[$rol])) {
@@ -68,16 +73,16 @@ $links = [
                 }
             }
             ?>
-<span class="px-3 py-2 font-semibold">
+        <span class="px-3 py-2 font-semibold">
+        <a href="/contacto/crear" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Contacto</a>
     👋 Hola, <?= htmlspecialchars($_SESSION["nombre"] ?? 'Usuario') ?>
-</span>
+        </span>
             <form action="/logout" method="GET" class="inline">
                 <button type="submit" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Cerrar sesión</button>
             </form>
         <?php else: ?>
             <a href="/empresa/panel" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Empresa</a>
             <a href="/user/convocatoria" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Convocatorias</a>
-            <a href="/contacto/crear" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Contacto</a>
             <a href="/nosotros" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Nosotros</a>
             <a href="/login" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Login</a>
         <?php endif; ?>

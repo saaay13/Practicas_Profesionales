@@ -34,7 +34,6 @@ class Empresa extends ActivaModelo {
         $this->cargo_representante = $args['cargo_representante'] ?? null;
         $this->verificada = $args['verificada'] ?? false;
         $this->imagen = $args['imagen'] ?? null;
-
     }
     public function setImagen ($imagen){
         {

@@ -29,6 +29,24 @@ class ActivaModelo{
     }
     return $datos;
     }
+
+    public static function listarConUsuarioGeneral($campoUsuario, $aliasNombre='nombre_usuario', 
+    $aliasApellido = 'apellido_usuario', $aliasEmail ="email_usuario") {
+        $query = "SELECT t.*, 
+                        u.nombre AS $aliasNombre, 
+                        u.apellido AS $aliasApellido,
+                        u.email AS $aliasEmail
+                FROM " . static::$tabla . " t
+                LEFT JOIN usuario u ON t.$campoUsuario = u.id_usuario";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        if ($resultado) {
+            $datos = $resultado->fetch_all(MYSQLI_ASSOC);
+        }
+        return $datos;
+    }
+
+
 public static function listarConRol() {
     $query = "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.telefono,
                      r.nombre_rol
@@ -56,7 +74,6 @@ public static function listarConEmpresa() {
               FROM convocatoria c
               JOIN empresa e ON c.id_empresa = e.id_empresa
               ORDER BY c.id_convocatoria ASC";
-
     $resultado = self::$db->query($query);
     $datos = [];
     if ($resultado) {
@@ -64,12 +81,6 @@ public static function listarConEmpresa() {
     }
     return $datos;
 }
-
-
-
-
-
-
      public function crear()
     {
        $atributos = $this->pasar();
@@ -85,9 +96,17 @@ public static function listarConEmpresa() {
     {
         $atributos=$this;
         $resultado=[];
-        foreach($atributos as $key =>$value) 
-        {
-            $resultado[$key]=self::$db->escape_string($value);
+        foreach ($this as $key => $value) {
+            // 🔑 Convertir enums a string
+            if ($value instanceof \UnitEnum) {
+                $value = $value->value;
+            }
+            // si es null, guardamos NULL
+            if ($value === null) {
+                $resultado[$key] = "NULL";
+            } else {
+                $resultado[$key] = self::$db->escape_string((string)$value);
+            }
         }
         return $resultado;
     }
