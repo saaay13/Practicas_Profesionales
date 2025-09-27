@@ -6,9 +6,8 @@ $links = [
         ['url'=>'/usuario','label'=>'Usuarios'],
         ['url'=>'/empresa','label'=>'Empresas'],
         ['url'=>'/convocatoria','label'=>'Convocatorias'],
-        ['url'=>'/practica','label'=>'Prácticas'],
         ['url'=>'/postulacion','label'=>'Postulaciones'],
-        ['url'=>'/asistencia','label'=>'Asistencia'],
+        ['url'=>'/practica','label'=>'Prácticas'],
         ['url'=>'/mensaje/index','label'=>'Mesaje'],
     ],
     2 => [

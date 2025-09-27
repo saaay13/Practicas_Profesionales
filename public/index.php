@@ -11,6 +11,7 @@ use Controllers\RolController;
 use Controllers\UsuarioController;
 use Controllers\ContactoController;
 use Controllers\LoginController;
+use Model\Postulacion;
 use MVC\Router;
 $router=new Router();   
 //Sin Authenticar
@@ -36,9 +37,20 @@ $router->get('/usuario', [UsuarioController::class, 'Index']);
 $router->get('/usuario/crear', [UsuarioController::class, 'Crear']);
 $router->post('/usuario/crear', [UsuarioController::class, 'Crear']);
 
+$router->get('/asistencia/historial', [AsistenciaController::class, 'Historial']);
+
 
 $router->get('/practica', [PracticaController::class, 'Index']);
+$router->get('/practica/crear', [PracticaController::class, 'Crear']);
+$router->post('/practica/crear', [PracticaController::class, 'Crear']);
+
+
 $router->get('/postulacion', [PostulacionController::class, 'Index']);
+$router->get('/postulacion/crear', [PostulacionController::class, 'Crear']);
+$router->post('/postulacion/crear', [PostulacionController::class, 'Crear']);
+$router->get('/postulacion/editar', [PostulacionController::class, 'Editar']);
+$router->post('/postulacion/editar', [PostulacionController::class, 'Editar']);
+
 $router->get('/estudiante', [EstudianteController::class, 'Index']);
 $router->get('/empresa', [EmpresaController::class, 'Index']);
 $router->get('/empresa/crear', [EmpresaController::class, 'Crear']);
@@ -51,6 +63,8 @@ $router->get('/convocatoria/crear', [ConvocatoriaController::class, 'Crear']);
 $router->post('/convocatoria/crear', [ConvocatoriaController::class, 'Crear']);
 
 $router->get('/asistencia', [AsistenciaController::class, 'Index']);
+$router->get('/asistencia/crear', [AsistenciaController::class, 'Crear']);
+$router->post('/asistencia/crear', [AsistenciaController::class, 'Crear']);
 
 $router->ComprobarRutas();
 

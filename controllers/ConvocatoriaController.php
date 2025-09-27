@@ -31,6 +31,8 @@ class ConvocatoriaController{
         $resultado = $convocatoria->crear();
 
         if ($resultado) {
+            $id_convocatoria = $resultado; 
+            Convocatoria::actualizarEstadoSiTodasAceptadas($id_convocatoria);
             header('Location: /convocatoria');
             exit;
         }

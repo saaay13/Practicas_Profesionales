@@ -53,9 +53,23 @@ class Convocatoria extends ActivaModelo {
     }
 
 
-    public function cambiarEstado(EstadoConvocatoria $nuevoEstado) {
-        $this->estado = $nuevoEstado;
+    public static function actualizarEstadoSiTodasAceptadas($id_convocatoria) {
+    $id_convocatoria = (int)$id_convocatoria;
+
+    $query = "SELECT COUNT(*) AS total, 
+                     SUM(CASE WHEN estado = 'aceptada' THEN 1 ELSE 0 END) AS aceptadas
+              FROM postulacion
+              WHERE id_convocatoria = $id_convocatoria";
+    
+    $resultado = self::$db->query($query);
+    $datos = $resultado->fetch_assoc();
+
+    if ($datos['total'] > 0 && $datos['total'] == $datos['aceptadas']) {
+        $queryUpdate = "UPDATE convocatoria SET estado = 'cerrada' WHERE id_convocatoria = $id_convocatoria";
+        self::$db->query($queryUpdate);
     }
+}
+
     public function setImagen ($imagen){
         {
             $this->imagen = $imagen;

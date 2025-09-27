@@ -42,12 +42,14 @@ class EmpresaController{
             exit;
         }
     }
-    $usuario=Usuario::listar() ;
+    $usuario=Usuario::listarConRol() ;
+    $usuariosEmpresa = array_filter($usuario, function($u) {
+        return strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2;
+    });
     $router->render('empresa/crear', [
         'empresa' => $empresa,
-        'usuario'=> $usuario
+        'usuario'=> $usuariosEmpresa
     ]);
 }
 }
-
 ?>

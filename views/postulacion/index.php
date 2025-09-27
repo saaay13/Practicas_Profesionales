@@ -69,10 +69,11 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         </td>
                         <td class="p-4"><?= $p['mensaje_presentacion'] ?></td>
                         <td class="p-4 text-center flex gap-2 justify-center">
-                            <a href="/postulacion/editar?id=<?= $p['id_postulacion'] ?>" 
+                            <a href="/postulacion/editar?id_postulacion=<?= $p['id_postulacion'] ?>" 
                                class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
                                Editar
                             </a>
+
                             <a href="/postulacion/eliminar?id=<?= $p['id_postulacion'] ?>" 
                                class="px-3 py-1 bg-red-600 text-color-5 rounded-md hover:bg-red-700 transition"
                                onclick="return confirm('¿Seguro que deseas eliminar esta postulación?')">

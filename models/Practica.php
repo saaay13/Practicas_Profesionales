@@ -28,7 +28,6 @@ class Practica extends ActivaModelo {
     public $horas_requeridas;
     public $horas_cumplidas;
     public EstadoPractica $estado;
-    public $imagen;
 
     public function __construct($args = []) {
         $this->id_postulacion = $args['id_postulacion'] ?? null;
@@ -45,10 +44,27 @@ class Practica extends ActivaModelo {
         } else {
             $this->estado = EstadoPractica::EN_CURSO;
         }
-        $this->imagen = $args['imagen'] ?? null;
     }
 
-    public function cambiarEstado(EstadoPractica $nuevoEstado): void {
-        $this->estado = $nuevoEstado;
+    public static function actualizarEstadoFinalizado($id_practica = null) {
+    $query = "UPDATE practica 
+              SET estado = 'finalizado'
+              WHERE estado = 'en_curso' AND horas_cumplidas >= 170";
+
+    if ($id_practica) {
+        $id_practica = (int)$id_practica;
+        $query .= " AND id_practica = $id_practica";
     }
+
+    self::$db->query($query);
+}
+
+public static function actualizarHorasCumplidas($id_practica, $totalHoras) {
+    $id_practica = (int)$id_practica;
+    $totalHoras = (float)$totalHoras;
+    $query = "UPDATE practica SET horas_cumplidas = $totalHoras WHERE id_practica = $id_practica";
+    self::$db->query($query);
+}
+
+
 }
