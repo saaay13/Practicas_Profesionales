@@ -38,34 +38,36 @@ class PostulacionController{
                 'usuario'=> $usuarioFiltrado
             ]);
         }
-public static function Editar(Router $router)
-{
-    $id_postulacion = (int)($_POST['postulacion']['id_postulacion'] ?? $_GET['id_postulacion'] ?? 0);
+
+
+        public static function Editar(Router $router) {
+    $id_postulacion = $_GET['id_postulacion'] ?? null;
     if (!$id_postulacion) {
         header('Location: /postulacion');
         exit;
     }
 
     $postulacion = Postulacion::find($id_postulacion);
-
-if (empty($postulacion)) {
-    echo "No existe postulacion con id $id_postulacion";
-    exit;
-}
-
+    if (!$postulacion) {
+        header('Location: /postulacion');
+        exit;
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
-        if (isset($_POST['postulacion']['estado'])) {
-            $estado = $_POST['postulacion']['estado'];
-            // Aseguramos que sea un valor válido del Enum
+        $data = $_POST['postulacion'];
+
+        // Manejo seguro del enum
+        if (isset($data['estado']) && !empty($data['estado'])) {
             try {
-                $_POST['postulacion']['estado'] = \Model\EstadoPostulacion::from($estado);
+                $data['estado'] = \Model\EstadoPostulacion::from(strtolower($data['estado']));
             } catch (\ValueError $e) {
-                $_POST['postulacion']['estado'] = null;
+                $data['estado'] = \Model\EstadoPostulacion::EN_REVISION; // valor por defecto
             }
         }
-        $postulacion->sincronizar($_POST['postulacion']);
-        $resultado = $postulacion->editar();
+
+        $postulacion->sincronizar($data);
+        $resultado = $postulacion->actualizar();
+
         if ($resultado) {
             header('Location: /postulacion');
             exit;
@@ -75,7 +77,7 @@ if (empty($postulacion)) {
     $convocatoria = Convocatoria::listar();
     $usuario = Usuario::listarConRol();
     $usuarioFiltrado = array_filter($usuario, function($u) {
-        return strtolower($u['nombre_rol']) === 'egresado' 
+        return strtolower($u['nombre_rol']) === 'egresado'
             || strtolower($u['nombre_rol']) === 'estudiante'
             || $u['id_rol'] == 3
             || $u['id_rol'] == 4;
@@ -83,9 +85,36 @@ if (empty($postulacion)) {
 
     $router->render('postulacion/editar', [
         'postulacion' => $postulacion,
-        'convocatoria'=> $convocatoria,
-        'usuario'=> $usuarioFiltrado
+        'convocatoria' => $convocatoria,
+        'usuario' => $usuarioFiltrado
     ]);
+}
+
+public static function Eliminar(Router $router) {
+    $id_postulacion = $_GET['id_postulacion'] ?? null;
+    if (!$id_postulacion) {
+        header('Location: /postulacion');
+        exit;
+    }
+
+    $postulacion = Postulacion::find($id_postulacion);
+    if ($postulacion) {
+        try {
+            // Se intenta eliminar solo la postulación
+            $eliminado = $postulacion->eliminar();
+            if ($eliminado) {
+                header('Location: /postulacion');
+                exit;
+            } else {
+                echo "No se pudo eliminar la postulación. Asegúrate de que no tenga prácticas asociadas.";
+            }
+        } catch (\mysqli_sql_exception $e) {
+            echo "No se puede eliminar la postulación porque tiene registros relacionados: " . $e->getMessage();
+        }
+    } else {
+        header('Location: /postulacion');
+        exit;
+    }
 }
 
 }

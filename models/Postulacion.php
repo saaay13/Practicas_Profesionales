@@ -10,6 +10,7 @@ enum EstadoPostulacion: string {
 
 class Postulacion extends ActivaModelo {
     protected static $tabla = 'postulacion';
+    protected static $pk = 'id_postulacion';
     protected static $columnDB = [
         'id_convocatoria',
         'id_usuario',
@@ -17,7 +18,7 @@ class Postulacion extends ActivaModelo {
         'estado',
         'mensaje_presentacion'
     ];
-
+    public $id_postulacion;
     public $id_convocatoria;
     public $id_usuario;
     public $fecha_postulacion;
@@ -25,6 +26,7 @@ class Postulacion extends ActivaModelo {
     public $mensaje_presentacion;
 
     public function __construct($args = []) {
+        $this->id_postulacion = $args['id_postulacion'] ?? null;
         $this->id_convocatoria = $args['id_convocatoria'] ?? null;
         $this->id_usuario = $args['id_usuario'] ?? null;
         $this->fecha_postulacion = $args['fecha_postulacion'] ?? date("Y-m-d");

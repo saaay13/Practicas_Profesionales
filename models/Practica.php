@@ -9,6 +9,7 @@ enum EstadoPractica: string {
 
 class Practica extends ActivaModelo {
     protected static $tabla = 'practica';
+    protected static $pk = 'id_practica';
     protected static $columnDB = [
         'id_postulacion',
         'id_supervisor',
@@ -21,6 +22,7 @@ class Practica extends ActivaModelo {
         
     ];
 
+    public $id_practica ;
     public $id_postulacion;
     public $id_supervisor;
     public $fecha_inicio;
@@ -30,6 +32,7 @@ class Practica extends ActivaModelo {
     public EstadoPractica $estado;
 
     public function __construct($args = []) {
+        $this->id_practica = $args['id_practica'] ?? null;
         $this->id_postulacion = $args['id_postulacion'] ?? null;
         $this->id_supervisor = $args['id_supervisor'] ?? null;
         $this->fecha_inicio = $args['fecha_inicio'] ?? null;

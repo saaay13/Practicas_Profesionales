@@ -50,6 +50,9 @@ $router->get('/postulacion/crear', [PostulacionController::class, 'Crear']);
 $router->post('/postulacion/crear', [PostulacionController::class, 'Crear']);
 $router->get('/postulacion/editar', [PostulacionController::class, 'Editar']);
 $router->post('/postulacion/editar', [PostulacionController::class, 'Editar']);
+$router->get('/postulacion/eliminar', [PostulacionController::class, 'Eliminar']);
+$router->post('/postulacion/eliminar', [PostulacionController::class, 'Eliminar']);
+
 
 $router->get('/estudiante', [EstudianteController::class, 'Index']);
 $router->get('/empresa', [EmpresaController::class, 'Index']);

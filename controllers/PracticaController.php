@@ -9,34 +9,94 @@ class PracticaController{
     $practica = Practica::listarPracticasActivas(); // trae estudiante y supervisor
     $router->render('practica/index', [
         'practica' => $practica
-    ]);
-}
+        ]);
+    }
 
-        public static function Crear(Router $router)
-        {
+    public static function Crear(Router $router)
+    {
          $practica = new Practica();
 
-     if ($_SERVER['REQUEST_METHOD'] === "POST") {
-        $practica = new Practica($_POST['practica']);
-        $resultado = $practica->crear(); // Método que guarda la práctica
-        if ($resultado) {
-            $id_practica = $resultado; 
-Practica::actualizarEstadoFinalizado($id_practica);
+            if ($_SERVER['REQUEST_METHOD'] === "POST") {
+                $practica = new Practica($_POST['practica']);
+                $resultado = $practica->crear(); // Método que guarda la práctica
+                if ($resultado) {
+                    $id_practica = $resultado; 
+                    Practica::actualizarEstadoFinalizado($id_practica);
+                    header('Location: /practica');
+                    exit;
+                }
+            }
+            $postulacion =Postulacion::listar() ;
+            $usuario=Usuario::listarConRol() ;
+            $usuarioFiltrado = array_filter($usuario, function($u) {
+            return strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2;
+            });              
+                 $router->render('practica/crear', [
+                'practica' => $practica,
+                'postulacion'=> $postulacion,
+                'usuario'=> $usuarioFiltrado
+                    ]);
+    }
 
+public static function Editar(Router $router) {
+    $id_practica = $_GET['id_practica'] ?? null;
+    if (!$id_practica) {
+        header('Location: /practica');
+        exit;
+    }
+
+    $practica = Practica::find($id_practica); 
+    if (!$practica) {
+        header('Location: /practica'); 
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === "POST") {
+        $data = $_POST['practica'];
+        $practica->sincronizar($data);
+        $resultado = $practica->actualizar();
+
+        if ($resultado) {
             header('Location: /practica');
             exit;
         }
     }
-    $postulacion =Postulacion::listar() ;
-    $usuario=Usuario::listarConRol() ;
-    $usuarioFiltrado = array_filter($usuario, function($u) {
-    return strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2;
-});               $router->render('practica/crear', [
-                'practica' => $practica,
-                'postulacion'=> $postulacion,
-                'usuario'=> $usuarioFiltrado
-            ]);
+
+    $postulaciones = Postulacion::listar(); 
+    $usuarios = Usuario::listarConRol();
+    $usuariosFiltrados = array_filter($usuarios, fn($u) => strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2);
+
+    $router->render('practica/editar', [
+        'practica' => $practica,
+        'postulacion' => $postulaciones,
+        'usuario' => $usuariosFiltrados
+    ]);
+}
+
+
+    public static function Eliminar(Router $router) {
+        $id_practica = $_GET['id_practica'] ?? null;
+        if (!$id_practica) {
+            header('Location: /practica');
+            exit;
         }
+
+        $practica = Practica::find($id_practica);
+        if ($practica) {
+            $eliminado = $practica->eliminar();
+            if ($eliminado) {
+                header('Location: /practica');
+                exit;
+            } else {
+                echo "No se pudo eliminar la práctica";
+            }
+        } else {
+            header('Location: /practica');
+            exit;
+        }
+    }
+
+
 }
 
 

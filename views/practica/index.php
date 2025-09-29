@@ -64,15 +64,17 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                     <td class="p-4"><?= $p['horas_cumplidas'] ?? '-' ?></td>
                     <td class="p-4"><?= $p['estado'] ?? '-' ?></td>
                     <td class="p-4 flex gap-2 justify-center flex-wrap">
-                        <a href="/practica/editar?id=<?= $p['id_practica'] ?>" 
-                           class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
-                           Editar
-                        </a>
-                        <a href="/practica/eliminar?id=<?= $p['id_practica'] ?>" 
-                           class="px-3 py-1 bg-red-600 text-color-5 rounded-md hover:bg-red-700 transition"
-                           onclick="return confirm('¿Seguro que deseas eliminar esta práctica?')">
-                           Eliminar
-                        </a>
+                              <a href="/practica/editar?id_practica=<?= $p['id_practica'] ?>" 
+   class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
+   Editar
+</a>
+
+
+                            <a href="/practica/eliminar?id_practica=<?= $p['id_practica'] ?>" 
+   class="px-3 py-1 bg-red-600 text-color-5 rounded-md hover:bg-red-700 transition"
+   onclick="return confirm('¿Seguro que deseas eliminar esta postulación?')">
+   Eliminar
+</a>
                         <a href="/asistencia/crear?id_practica=<?= $p['id_practica'] ?>"
                             class="px-3 py-1 bg-color-2 text-color-5 rounded-md hover:bg-color-3 transition">
                             Registrar Asistencia

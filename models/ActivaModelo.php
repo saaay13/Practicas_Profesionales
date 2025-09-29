@@ -183,62 +183,76 @@ public static function listarAsistencia($id_usuario) {
         }
     }
 }
-public function editar() {
-    $atributos = $this->pasar(); // reutiliza tu función para limpiar/escapar valores
 
-    $campos = [];
+public function actualizar() {
+    $pk = static::$pk ?? 'id_' . static::$tabla;
+    if (!isset($this->$pk)) {
+        throw new \Exception("$pk no está definido");
+    }
+
+    $atributos = $this->pasar();
+    $valores = [];
+
     foreach ($atributos as $key => $value) {
-        // Ignorar propiedades vacías o que no existan en la base de datos
-        if ($key === 'id_' . static::$tabla) continue;
-
+        if ($key === $pk) continue;
         if ($value === null) {
-            $campos[] = "$key = NULL";
+            $valores[] = "$key = NULL";
         } else {
-            $campos[] = "$key = '$value'";
+            $valores[] = "$key = '" . self::$db->escape_string((string)$value) . "'";
         }
     }
 
-    if (!isset($this->{'id_' . static::$tabla})) {
-        return false; // No se puede editar si no hay id
-    }
+    $query = "UPDATE " . static::$tabla . " SET " . join(", ", $valores);
+    $query .= " WHERE $pk = '" . self::$db->escape_string((string)$this->$pk) . "' LIMIT 1";
 
-    $id = (int)$this->{'id_' . static::$tabla};
-    $query = "UPDATE " . static::$tabla . " SET " . join(", ", $campos) . " WHERE id_" . static::$tabla . " = $id";
     $resultado = self::$db->query($query);
-    return $resultado;
+    return $resultado && self::$db->affected_rows > 0;
 }
 
+
+
+
+
 public static function find($id) {
-    $id = (int)$id;
-    $query = "SELECT * FROM " . static::$tabla . " WHERE id_" . static::$tabla . " = $id LIMIT 1";
+    $pk = static::$pk ?? 'id_' . static::$tabla;
+    $query = "SELECT * FROM " . static::$tabla . " WHERE $pk = '" . self::$db->escape_string($id) . "' LIMIT 1";
     $resultado = self::$db->query($query);
 
-    if ($resultado && $resultado->num_rows > 0) {
-        $datos = $resultado->fetch_assoc();
-
-        // Intentamos convertir estado, si falla lo dejamos como string
-        if (isset($datos['estado'])) {
-            try {
-                $datos['estado'] = \Model\EstadoPostulacion::from($datos['estado']);
-            } catch (\ValueError $e) {
-                // dejamos como string para no romper la carga
-            }
-        }
-
-        return (new static())->sincronizar($datos);
+    if ($resultado && $resultado->num_rows) {
+        $registro = $resultado->fetch_assoc();
+        $obj = new static($registro);
+        $obj->$pk = $registro[$pk]; 
+        return $obj;
     }
-
     return null;
 }
 
 
-public function sincronizar($datos = []) {
-    foreach ($datos as $key => $value) {
-        if (property_exists($this, $key) && !is_null($value)) {
+public function sincronizar($args = []) {
+    foreach($args as $key => $value) {
+        if(property_exists($this, $key)) {
             $this->$key = $value;
         }
     }
 }
+
+public function eliminar() {
+    $pk = static::$pk ?? 'id_' . static::$tabla; 
+    if (!isset($this->$pk)) {
+        throw new \Exception("$pk no está definido");
+    }
+
+    self::$db->query("SET FOREIGN_KEY_CHECKS=0"); // desactiva temporalmente
+    $query = "DELETE FROM " . static::$tabla . " WHERE $pk = '" . self::$db->escape_string((string)$this->$pk) . "' LIMIT 1";
+    $resultado = self::$db->query($query);
+    self::$db->query("SET FOREIGN_KEY_CHECKS=1"); // vuelve a activar
+
+    return $resultado && self::$db->affected_rows > 0;
+}
+
+
+
+
 
 
     
