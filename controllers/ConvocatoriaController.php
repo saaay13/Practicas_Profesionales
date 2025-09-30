@@ -4,33 +4,49 @@ use Model\Convocatoria;
 use Model\Empresa;
 use MVC\Router;
 class ConvocatoriaController{
-    public static function Index(Router $router){   
+    public static function Index(Router $router){
+   
         $convocatoria =Convocatoria::listarConEmpresa();
         $router->render('convocatoria/index',[
             'convocatoria' => $convocatoria
         ]);
     }
     public static function IndexUser(Router $router){   
+
         $convocatoria =Convocatoria::listarConEmpresa();
         $router->render('user/convocatoria/index',[
             'convocatoria' => $convocatoria
         ]);
     }
- public static function Crear(Router $router)
+    public static function IndexConvocatorias(Router $router){ 
+                    \verificarRol(rolesPermitidos: [1,2,3,4]); 
+  
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if (!isset($_SESSION['id_usuario'])) {
+        header('Location: /login');
+        exit;
+    }
+    $id_usuario = $_SESSION['id_usuario'];
+    $convocatoria = Convocatoria::listarMisConvocatorias($id_usuario);
+    $router->render('user/convocatoria/index', [
+        'convocatoria' => $convocatoria
+    ]);
+}
+ 
+public static function Crear(Router $router)
 {
+    \verificarRol(rolesPermitidos: [1,2]); 
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    $rol = $_SESSION['rol'] ?? null;
+    $id_usuario = $_SESSION['id_usuario'] ?? null;
     $convocatoria = new Convocatoria();
-
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $convocatoria = new Convocatoria($_POST['convocatoria']);
-
         if (!empty($_FILES['imagen']['name'])) {
             $nombre_imagen = uniqid() . "_" . basename($_FILES['imagen']['name']);
             $carpeta = __DIR__ . '/../public/img/convocatoria/';
 
-            // Crear la carpeta si no existe
-            if (!is_dir($carpeta)) {
-                mkdir($carpeta, 0777, true);
-            }
+            if (!is_dir($carpeta)) mkdir($carpeta, 0777, true);
 
             $ubicacion = $carpeta . $nombre_imagen;
 
@@ -47,26 +63,37 @@ class ConvocatoriaController{
 
         if ($resultado) {
             $id_convocatoria = $resultado;
-            Convocatoria::actualizarEstadoSiTodasAceptadas($id_convocatoria);
-            header('Location: /convocatoria');
+            Convocatoria::actualizarEstado($id_convocatoria);
+            if ($rol == 2) {
+                header('Location: /empresa/misconvocatorias');
+            } else {
+                header('Location: /convocatoria');
+            }
             exit;
         }
     }
+    if ($rol == 2) {
+        $empresa = Empresa::listarMisEmpresas($id_usuario);
+    } else {
+        $empresa = Empresa::listar();
+    }
 
-    $empresa = Empresa::listar();
     $router->render('convocatoria/crear', [
         'convocatoria' => $convocatoria,
         'empresa' => $empresa
     ]);
 }
 
+
 public static function Editar(Router $router) {
+    \verificarRol(rolesPermitidos: [1,2]); 
+    session_start();
+    $rol = $_SESSION['rol'] ?? null;
     $id_convocatoria = $_GET['id_convocatoria'] ?? null;
     if (!$id_convocatoria) {
         header('Location: /convocatoria');
         exit;
     }
-
     $convocatoria = Convocatoria::find($id_convocatoria);
     if (!$convocatoria) {
         header('Location: /convocatoria');
@@ -75,8 +102,6 @@ public static function Editar(Router $router) {
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $convocatoria->sincronizar($_POST['convocatoria']);
-
-        // Manejo de imagen si se sube una nueva
         if (!empty($_FILES['imagen']['name'])) {
             $nombre_imagen = uniqid() . "_" . basename($_FILES['imagen']['name']);
             $carpeta = __DIR__ . '/../public/img/convocatoria/';
@@ -84,11 +109,8 @@ public static function Editar(Router $router) {
             if (!is_dir($carpeta)) {
                 mkdir($carpeta, 0777, true);
             }
-
             $ubicacion = $carpeta . $nombre_imagen;
-
             if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ubicacion)) {
-                // Eliminar imagen anterior si existe
                 if (!empty($convocatoria->imagen) && file_exists($carpeta . $convocatoria->imagen)) {
                     unlink($carpeta . $convocatoria->imagen);
                 }
@@ -99,9 +121,12 @@ public static function Editar(Router $router) {
                 exit;
             }
         }
-
         $convocatoria->actualizar();
-        header('Location: /convocatoria');
+        if ($rol == 2) {
+            header('Location: /empresa/misconvocatorias');
+        } else {
+            header('Location: /convocatoria');
+        }
         exit;
     }
 
@@ -113,9 +138,14 @@ public static function Editar(Router $router) {
 }
 
 public static function Eliminar(Router $router) {
+    \verificarRol(rolesPermitidos: [1,2]); 
+
+    session_start();
+    $rol = $_SESSION['rol'] ?? null;
+
     $id_convocatoria = $_GET['id_convocatoria'] ?? null;
     if (!$id_convocatoria) {
-        header('Location: /usuario');
+        header('Location: /convocatoria');
         exit;
     }
 
@@ -130,7 +160,13 @@ public static function Eliminar(Router $router) {
 
         if ($eliminado) {
             $_SESSION['mensaje'] = "Convocatoria eliminada correctamente";
-            header('Location: /convocatoria');
+
+            // Redirigir según el rol
+            if ($rol == 2) {
+                header('Location: /empresa/misconvocatorias');
+            } else {
+                header('Location: /convocatoria');
+            }
             exit;
         } else {
             $_SESSION['error'] = "No se pudo eliminar la convocatoria";
@@ -138,7 +174,7 @@ public static function Eliminar(Router $router) {
             exit;
         }
     } catch (\Exception $e) {
-        $_SESSION['error'] = "Error al eliminar lso otros: " . $e->getMessage();
+        $_SESSION['error'] = "Error al eliminar la convocatoria: " . $e->getMessage();
         header('Location: /convocatoria');
         exit;
     }

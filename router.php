@@ -39,7 +39,7 @@ class Router
     }
 
     // Sin layout
-    if ($ubicacion === 'login') {
+    if ($ubicacion === 'login' || $ubicacion === 'registro' || $ubicacion === 'error') {
         include __DIR__ . "/views/{$ubicacion}.php";
         ob_end_flush();
         return;
@@ -49,6 +49,7 @@ class Router
     include __DIR__ . "/views/{$ubicacion}.php";
     $contenido = ob_get_clean();
     include __DIR__ . "/views/layout.php";
+
 }
 
     

@@ -5,7 +5,8 @@ use Model\Postulacion;
 use Model\Usuario;
 use MVC\Router;
 class PostulacionController{
-    public static function Index(Router $router){   
+    public static function Index(Router $router){ 
+                     \verificarRol(rolesPermitidos: [1,2,3,4]); 
     $postulacion = Postulacion::listarConUsuarioGeneral('id_usuario',
      'nombre_usuario', 'apellido_usuario','email_usuario');
         $router->render('postulacion/index',[
@@ -14,6 +15,8 @@ class PostulacionController{
     }
     public static function Crear(Router $router)
         {
+    \verificarRol(rolesPermitidos: [1,2,3,4]); 
+
          $postulacion = new Postulacion();
 
      if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -40,7 +43,11 @@ class PostulacionController{
         }
 
 
-        public static function Editar(Router $router) {
+public static function Editar(Router $router) {
+  \verificarRol(rolesPermitidos: [1,2]); 
+
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    
     $id_postulacion = $_GET['id_postulacion'] ?? null;
     if (!$id_postulacion) {
         header('Location: /postulacion');
@@ -56,12 +63,11 @@ class PostulacionController{
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $data = $_POST['postulacion'];
 
-        // Manejo seguro del enum
         if (isset($data['estado']) && !empty($data['estado'])) {
             try {
                 $data['estado'] = \Model\EstadoPostulacion::from(strtolower($data['estado']));
             } catch (\ValueError $e) {
-                $data['estado'] = \Model\EstadoPostulacion::EN_REVISION; // valor por defecto
+                $data['estado'] = \Model\EstadoPostulacion::EN_REVISION; // Valor por defecto
             }
         }
 
@@ -69,14 +75,22 @@ class PostulacionController{
         $resultado = $postulacion->actualizar();
 
         if ($resultado) {
-        \Model\ActivaModelo::actualizarConvocatoriaYRechazarOtras($postulacion->id_postulacion);
-            header('Location: /postulacion');
+            \Model\ActivaModelo::actualizarEstadosConvocatoria($postulacion->id_postulacion);
+
+            $rol = $_SESSION['rol'] ?? null;
+
+            if ($rol == 2) {
+                header('Location: /empresa/mispostulaciones');
+            } else {
+                header('Location: /postulacion');
+            }
             exit;
         }
     }
 
     $convocatoria = Convocatoria::listar();
     $usuario = Usuario::listarConRol();
+
     $usuarioFiltrado = array_filter($usuario, function($u) {
         return strtolower($u['nombre_rol']) === 'egresado'
             || strtolower($u['nombre_rol']) === 'estudiante'
@@ -90,9 +104,10 @@ class PostulacionController{
         'usuario' => $usuarioFiltrado
     ]);
 }
-
-
 public static function Eliminar(Router $router) {
+  \verificarRol(rolesPermitidos: [1,2]); 
+    if (session_status() === PHP_SESSION_NONE) session_start();
+
     $id_postulacion = $_GET['id_postulacion'] ?? null;
     if (!$id_postulacion) {
         header('Location: /postulacion');
@@ -104,24 +119,63 @@ public static function Eliminar(Router $router) {
         header('Location: /postulacion');
         exit;
     }
-
     try {
         $eliminado = $postulacion->eliminar();
 
+        $rol = $_SESSION['rol'] ?? null;
+
         if ($eliminado) {
-            $_SESSION['mensaje'] = "Postulacion eliminada correctamente";
-            header('Location: /postulacion');
+            if ($rol == 2) {
+                header('Location: /empresa/mispostulaciones');
+            } else {
+                header('Location: /postulacion');
+            }
             exit;
         } else {
-            $_SESSION['error'] = "No se pudo eliminar el postulacion";
+            $_SESSION['error'] = "No se pudo eliminar la postulación";
             header('Location: /postulacion');
             exit;
         }
     } catch (\Exception $e) {
-        $_SESSION['error'] = "Error al eliminar el otros: " . $e->getMessage();
+        $_SESSION['error'] = "Error al eliminar la postulación: " . $e->getMessage();
         header('Location: /postulacion');
         exit;
     }
+}
+
+public static function IndexPost(Router $router) {
+\verificarRol(rolesPermitidos: [1,2]); 
+
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    $id_usuario = $_SESSION['id_usuario'] ?? null;
+    if (!$id_usuario) {
+        header('Location: /login');
+        exit;
+    }
+    $rol = $_SESSION['rol'] ?? null;
+    $postulaciones = Postulacion::IndexPostulaciones($id_usuario);
+
+    $router->render('user/postulaciones/index', [
+        'postulaciones' => $postulaciones,
+        'rol' => $rol 
+    ]);
+}
+public static function IndexPostula(Router $router) {
+\verificarRol(rolesPermitidos: [1,2,3,4]); 
+
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    $id_usuario = $_SESSION['id_usuario'] ?? null;
+    if (!$id_usuario) {
+        header('Location: /login');
+        exit;
+    }
+    $rol = $_SESSION['rol'] ?? null;
+    $postulaciones = Postulacion::IndexPostulacion($id_usuario);
+
+    $router->render('user/postulaciones/index', [
+        'postulaciones' => $postulaciones,
+        'rol' => $rol 
+    ]);
 }
 }
 ?>

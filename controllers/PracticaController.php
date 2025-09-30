@@ -5,7 +5,9 @@ use Model\Practica;
 use Model\Usuario;
 use MVC\Router;
 class PracticaController{
-   public static function Index(Router $router){   
+   public static function Index(Router $router){ 
+\verificarRol(rolesPermitidos: [1,2]); 
+  
     $practica = Practica::listarPracticasActivas(); // trae estudiante y supervisor
     $router->render('practica/index', [
         'practica' => $practica

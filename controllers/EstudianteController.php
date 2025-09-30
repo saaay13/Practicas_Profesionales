@@ -4,13 +4,17 @@ use Model\Estudiante;
 use MVC\Router;
 
 class EstudianteController {
-    public static function Index(Router $router){   
+    public static function Index(Router $router){  
+                \verificarRol(rolesPermitidos: [1,2]); 
+ 
         $estudiante = Estudiante::listarConUsuario();
         $router->render('estudiante/index', [
             'estudiante' => $estudiante
         ]);
     }
     public static function Editar(Router $router) {
+                \verificarRol(rolesPermitidos: [1,2]); 
+
     $id_estudiante = $_GET['id_estudiante'] ?? null;
     if (!$id_estudiante) {
         header('Location: /estudiante');

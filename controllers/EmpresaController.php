@@ -5,13 +5,15 @@ use Model\Empresa;
 use Model\Usuario;
 use MVC\Router;
 class EmpresaController{
-    public static function Index(Router $router){   
+    public static function Index(Router $router){  
+
         $empresa = Empresa::listarConUsuarioE();
         $router->render('empresa/index',[
             'empresa' => $empresa
         ]);
     }
     public static function IndexUser(Router $router){   
+
         $empresa = Empresa::listarConUsuarioE();
         $convocatoria = Convocatoria::listar();
         $router->render("user/inicio/index", [
@@ -27,12 +29,13 @@ class EmpresaController{
     }
 public static function Crear(Router $router)
 {
+    \verificarRol(rolesPermitidos: [1,2]); 
+
     $empresa = new Empresa();
 
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $data = $_POST['empresa'];
 
-        // Aseguramos que verificada tenga valor booleano
         $data['verificada'] = isset($data['verificada']) ? 1 : 0;
 
         $empresa = new Empresa($data);
@@ -40,14 +43,10 @@ public static function Crear(Router $router)
         if (!empty($_FILES['imagen']['name'])) {
             $nombre_imagen = uniqid() . "_" . basename($_FILES['imagen']['name']);
             $carpeta = __DIR__ . '/../public/img/empresa/';
-
-            // Crear la carpeta si no existe
             if (!is_dir($carpeta)) {
                 mkdir($carpeta, 0777, true);
             }
-
             $ubicacion = $carpeta . $nombre_imagen;
-
             if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ubicacion)) {
                 $empresa->setImagen($nombre_imagen);
             } else {
@@ -56,14 +55,12 @@ public static function Crear(Router $router)
                 exit;
             }
         }
-
         $resultado = $empresa->crear();
         if ($resultado) {
             header('Location: /empresa');
             exit;
         }
     }
-
     $usuario = Usuario::listarConRol();
     $usuariosEmpresa = array_filter($usuario, function($u) {
         return strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2;
@@ -74,31 +71,26 @@ public static function Crear(Router $router)
         'usuario' => $usuariosEmpresa
     ]);
 }
-
-
 public static function Editar(Router $router) {
+    \verificarRol(rolesPermitidos: [1,2]); 
+
     $id_empresa = $_GET['id_empresa'] ?? null;
     if (!$id_empresa) {
         header('Location: /empresa');
         exit;
     }
-
     $empresa = Empresa::find($id_empresa);
     if (!$empresa) {
         header('Location: /empresa');
         exit;
     }
-
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $data = $_POST['empresa'];
 
-        // Aseguramos que verificada tenga valor booleano
         $data['verificada'] = isset($data['verificada']) ? 1 : 0;
 
-        // Sincronizamos los datos con el objeto empresa
         $empresa->sincronizar($data);
 
-        // Manejo de imagen si se sube una nueva
         if (!empty($_FILES['imagen']['name'])) {
             $nombre_imagen = uniqid() . "_" . basename($_FILES['imagen']['name']);
             $carpeta = __DIR__ . '/../public/img/empresa/';
@@ -110,7 +102,6 @@ public static function Editar(Router $router) {
             $ubicacion = $carpeta . $nombre_imagen;
 
             if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ubicacion)) {
-                // Eliminar imagen anterior si existe
                 if (!empty($empresa->imagen) && file_exists($carpeta . $empresa->imagen)) {
                     unlink($carpeta . $empresa->imagen);
                 }
@@ -121,8 +112,6 @@ public static function Editar(Router $router) {
                 exit;
             }
         }
-
-        // Actualizar la empresa en la base de datos
         $resultado = $empresa->actualizar();
 
         if ($resultado) {
@@ -132,7 +121,6 @@ public static function Editar(Router $router) {
         }
     }
 
-    // Listado de usuarios que tienen rol empresa para el select
     $usuario = Usuario::listarConRol();
     $usuariosEmpresa = array_filter($usuario, function($u) {
         return strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2;
@@ -144,7 +132,24 @@ public static function Editar(Router $router) {
     ]);
 }
 
+    public static function IndexEmpresas(Router $router){   
+    if (session_status() === PHP_SESSION_NONE) session_start();
+
+    if (!isset($_SESSION['id_usuario'])) {
+        header('Location: /login');
+        exit;
+    }
+    $id_usuario = $_SESSION['id_usuario'];
+    $empresa = Empresa::listarMisEmpresas($id_usuario);
+
+    $router->render('user/inicio/panel', [
+        'empresa' => $empresa
+    ]);
+    
+}
 public static function Eliminar(Router $router) {
+    \verificarRol(rolesPermitidos: [1,2]); 
+
     $id_empresa = $_GET['id_empresa'] ?? null;
     if (!$id_empresa) {
         header('Location: /empresa');

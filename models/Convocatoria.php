@@ -53,14 +53,13 @@ class Convocatoria extends ActivaModelo {
     }
 
 
-    public static function actualizarEstadoSiTodasAceptadas($id_convocatoria) {
+    public static function actualizarEstado($id_convocatoria) {
     $id_convocatoria = (int)$id_convocatoria;
-
     $query = "SELECT COUNT(*) AS total, 
                      SUM(CASE WHEN estado = 'aceptada' THEN 1 ELSE 0 END) AS aceptadas
               FROM postulacion
               WHERE id_convocatoria = $id_convocatoria";
-    
+
     $resultado = self::$db->query($query);
     $datos = $resultado->fetch_assoc();
 
@@ -69,13 +68,29 @@ class Convocatoria extends ActivaModelo {
         self::$db->query($queryUpdate);
     }
 }
-
 public function setImagen ($imagen){
         {
             $this->imagen = $imagen;
         }
 
     }
+public static function listarMisConvocatorias($id_usuario) {
+    $id_usuario = (int)$id_usuario;
+    $query = "SELECT c.*,
+                     e.nombre_empresa
+              FROM " . static::$tabla . " c
+              JOIN empresa e ON c.id_empresa = e.id_empresa
+              WHERE c.id_empresa = $id_usuario
+              ORDER BY c.fecha_publicacion DESC";
+
+    $resultado = self::$db->query($query);
+    $datos = [];
+    if ($resultado) {
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
+    }
+    return $datos;
+}
+
 
 }
 ?>

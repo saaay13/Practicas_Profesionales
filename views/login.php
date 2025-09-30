@@ -77,7 +77,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
     <div class="mt-6 text-center text-color-1">
         ¿No tienes cuenta?
-        <a href="/usuario/crear" class="font-bold hover-text-color-4">Regístrate aquí</a>
+        <a href="/registro" class="font-bold hover-text-color-4">Regístrate aquí</a>
     </div>
 </div>
 

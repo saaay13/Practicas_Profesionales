@@ -4,13 +4,17 @@ use Model\Egresado;
 use MVC\Router;
 
 class EgresadoController {
-    public static function Index(Router $router){   
+    public static function Index(Router $router){ 
+    \verificarRol(rolesPermitidos: [1,2]); 
+  
         $egresado = Egresado::listarConUsuario();
         $router->render('egresado/index', [
             'egresado' => $egresado
         ]);
     }
     public static function Editar(Router $router) {
+    \verificarRol(rolesPermitidos: [1,2]); 
+
     $id_egresado = $_GET['id_egresado'] ?? null;
     if (!$id_egresado) {
         header('Location: /egresado');

@@ -27,7 +27,6 @@ class Empresa extends ActivaModelo {
 
     public function __construct($args = []) {
         $this->id_empresa = $args['id_empresa'] ?? null;
-
         $this->nombre_empresa = $args['nombre_empresa'] ?? null;
         $this->nit = $args['nit'] ?? null;
         $this->rubro = $args['rubro'] ?? null;
@@ -43,5 +42,28 @@ class Empresa extends ActivaModelo {
         }
 
     }
+ public static function listarMisEmpresas($id_usuario) {
+    $id_usuario = (int)$id_usuario;
+
+    $query = "SELECT e.*, 
+                 u.nombre AS representante_nombre, 
+                 u.apellido AS representante_apellido, 
+                 u.email AS representante_email, 
+                 u.telefono AS representante_telefono
+          FROM empresa e
+          LEFT JOIN usuario u ON e.id_representante = u.id_usuario
+          WHERE e.id_representante = $id_usuario
+          ORDER BY e.id_empresa DESC"; 
+
+
+    $resultado = self::$db->query($query);
+    $datos = [];
+    if ($resultado) {
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
+    }
+    return $datos;
+}
+
+
 }
 ?>

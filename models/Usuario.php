@@ -3,14 +3,6 @@ namespace Model;
 
 class Usuario extends ActivaModelo {
     protected static $tabla = 'usuario';
-protected static $tablas_hijas = [
-        'postulacion' => 'id_usuario',
-        'practica' => 'id_supervisor',
-        'contacto'=> 'id_usuario',
-        'egresado'=> 'id_egresado',
-        'empresa'=> 'id_representante',
-        'estudiante'=> 'id_estudiante',
-    ];
 
     protected static $columnDB = ['id_usuario','nombre','apellido','email','password','telefono','fecha_registro','id_rol'];
     public $id_usuario;

@@ -29,5 +29,22 @@ class Asistencia extends ActivaModelo {
         $this->verificado_por = $args['verificado_por'] ?? null;
         $this->observacion = $args['observacion'] ?? '';
     }
+     public static function listarAsistencia($id_usuario) {
+        $id_usuario = (int)$id_usuario;
+        $query = "SELECT a.*, p.id_postulacion, post.id_usuario,
+                         u.nombre AS estudiante_nombre, u.apellido AS estudiante_apellido,
+                         s.nombre AS supervisor_nombre, s.apellido AS supervisor_apellido
+                  FROM asistencia a
+                  JOIN practica p ON a.id_practica = p.id_practica
+                  JOIN postulacion post ON p.id_postulacion = post.id_postulacion
+                  JOIN usuario u ON post.id_usuario = u.id_usuario
+                  JOIN usuario s ON a.verificado_por = s.id_usuario
+                  WHERE u.id_usuario = $id_usuario
+                  ORDER BY a.fecha DESC";
+
+        $resultado = self::$db->query($query);
+        return $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
+    }
+
 }
 ?>

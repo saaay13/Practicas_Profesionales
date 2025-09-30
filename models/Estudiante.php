@@ -5,8 +5,6 @@ class Estudiante extends ActivaModelo {
     protected static $tabla = 'estudiante';
         protected static $fk_usuario = 'id_estudiante';
         protected static $pk = 'id_estudiante';
-
-
     protected static $columnDB = [
         'id_estudiante',
         'carrera',

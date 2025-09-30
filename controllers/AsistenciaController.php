@@ -7,8 +7,9 @@ use Model\Usuario;
 use MVC\Router;
 
 class AsistenciaController {
-
-    public static function Index(Router $router){   
+    public static function Index(Router $router){ 
+    \verificarRol(rolesPermitidos: [1,2]); 
+  
         $asistencia = Asistencia::listarConUsuarioGeneral(
             'verificado_por', 
             'nombre_verificador',
@@ -20,25 +21,22 @@ class AsistenciaController {
             'asistencia' => $asistencia
         ]);
     }
-
-public static function Crear(Router $router) {
+    public static function Crear(Router $router) {
+    \verificarRol(rolesPermitidos: [1,2]); 
     $asistencia = new Asistencia();
-
     $id_practica = $_GET['id_practica'] ?? null;
     $practicaSeleccionada = null;
-
     if ($id_practica) {
         $practicas = Practica::listarPracticasActivas();
         $practicaSeleccionada = array_values(array_filter($practicas, fn($p) => $p['id_practica'] == $id_practica))[0] ?? null;
     }
-
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $datosAsistencia = [
             'id_practica' => $_POST['id_practica'] ?? null,
             'fecha' => $_POST['asistencia']['fecha'],
             'hora_ingreso' => $_POST['asistencia']['hora_ingreso'],
             'hora_salida' => $_POST['asistencia']['hora_salida'] ?: null,
-            'verificado_por' => $practicaSeleccionada['id_supervisor'] ?? null, // supervisor de la práctica
+            'verificado_por' => $practicaSeleccionada['id_supervisor'] ?? null, 
             'observacion' => $_POST['asistencia']['observacion'] ?? ''
         ];
 
@@ -48,54 +46,50 @@ public static function Crear(Router $router) {
         header('Location: /practica');
         exit;
     }
-
-    // Solo necesitamos la práctica y el supervisor
     $router->render('asistencia/crear', [
         'asistencia' => $asistencia,
         'practica' => $practicaSeleccionada
     ]);
-}
-
-
-public static function Historial(Router $router) {
-    if (!isset($_GET['id_practica']) || !isset($_GET['id_usuario'])) {
-        header('Location: /practica');
-        exit;
     }
+    public static function Historial(Router $router) {
+            \verificarRol(rolesPermitidos: [1,2]); 
 
-    $id_practica = (int)$_GET['id_practica'];
-    $id_usuario = (int)$_GET['id_usuario'];
+            if (!isset($_GET['id_practica']) || !isset($_GET['id_usuario'])) {
+                header('Location: /practica');
+                exit;
+            }
 
-    $historial = Asistencia::listarAsistencia($id_usuario);
-    $historial = array_filter($historial, fn($a) => (int)$a['id_practica'] === $id_practica);
+            $id_practica = (int)$_GET['id_practica'];
+            $id_usuario = (int)$_GET['id_usuario'];
 
-    // Calcular horas cumplidas totales
-    $totalHoras = 0;
+            $historial = Asistencia::listarAsistencia($id_usuario);
+            $historial = array_filter($historial, fn($a) => (int)$a['id_practica'] === $id_practica);
 
-foreach ($historial as $a) {
-    if (!empty($a['hora_ingreso']) && !empty($a['hora_salida'])) {
-        try {
-            $inicio = new \DateTime($a['hora_ingreso']);
-            $fin = new \DateTime($a['hora_salida']);
-            $diferencia = $fin->diff($inicio);
-            $horas = $diferencia->h + ($diferencia->i / 60);
-            $totalHoras += $horas;
-        } catch (\Exception $e) {
-            // Si hay error en formato de hora, lo ignoramos
-            continue;
+            $totalHoras = 0;
+
+        foreach ($historial as $a) {
+            if (!empty($a['hora_ingreso']) && !empty($a['hora_salida'])) {
+                try {
+                    $inicio = new \DateTime($a['hora_ingreso']);
+                    $fin = new \DateTime($a['hora_salida']);
+                    $diferencia = $fin->diff($inicio);
+                    $horas = $diferencia->h + ($diferencia->i / 60);
+                    $totalHoras += $horas;
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
         }
+            Practica::actualizarHorasCumplidas($id_practica, $totalHoras);
+
+            $router->render('asistencia/historial', [
+                'historial' => $historial,
+                'totalHoras' => $totalHoras
+            ]);
     }
-}
+    public static function Editar(Router $router) {
+        \verificarRol(rolesPermitidos: [1,2]); 
 
-
-    Practica::actualizarHorasCumplidas($id_practica, $totalHoras);
-
-    $router->render('asistencia/historial', [
-        'historial' => $historial,
-        'totalHoras' => $totalHoras
-    ]);
-}
-public static function Editar(Router $router) {
     $id_asistencia = $_GET['id_asistencia'] ?? null;
     if (!$id_asistencia) {
         header('Location: /asistencia');
@@ -126,9 +120,10 @@ public static function Editar(Router $router) {
         'asistencia' => $asistencia,
         'usuario' => $usuariosFiltrados
     ]);
-}
+    }
+    public static function Eliminar(Router $router) {
+        \verificarRol(rolesPermitidos: [1,2]); 
 
-public static function Eliminar(Router $router) {
     $id_asistencia = $_GET['id_asistencia'] ?? null;
     if (!$id_asistencia) {
         header('Location: /asistencia');
@@ -158,8 +153,7 @@ public static function Eliminar(Router $router) {
         header('Location: /asistencia');
         exit;
     }
-}
-
+    }
 
 }
 ?>

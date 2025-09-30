@@ -54,6 +54,60 @@ public static function listarAceptadas() {
     return $datos;
 }
 
-   
+public static function IndexPostulaciones($id_usuario) {
+    $stmt = self::$db->prepare(
+        "SELECT 
+            p.id_postulacion,
+            p.fecha_postulacion,
+            p.mensaje_presentacion,
+            p.estado AS estado_postulacion,
+            u.id_usuario AS estudiante_id,
+            u.nombre AS estudiante_nombre,
+            u.apellido AS estudiante_apellido,
+            c.id_convocatoria,
+            c.titulo AS convocatoria_titulo,
+            e.id_empresa,
+            e.nombre_empresa
+        FROM postulacion p
+        JOIN convocatoria c ON p.id_convocatoria = c.id_convocatoria
+        JOIN usuario u ON p.id_usuario = u.id_usuario
+        JOIN empresa e ON c.id_empresa = e.id_empresa
+        WHERE e.id_representante = ?
+        ORDER BY p.fecha_postulacion DESC"
+    );
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    return $resultado->fetch_all(MYSQLI_ASSOC);
+}
+
+public static function IndexPostulacion($id_usuario) {
+    $stmt = self::$db->prepare(
+        "SELECT 
+            p.id_postulacion,
+            p.fecha_postulacion,
+            p.mensaje_presentacion,
+            p.estado AS estado_postulacion,
+            u.id_usuario AS estudiante_id,
+            u.nombre AS estudiante_nombre,
+            u.apellido AS estudiante_apellido,
+            c.id_convocatoria,
+            c.titulo AS convocatoria_titulo,
+            e.id_empresa,
+            e.nombre_empresa
+        FROM postulacion p
+        JOIN convocatoria c ON p.id_convocatoria = c.id_convocatoria
+        JOIN usuario u ON p.id_usuario = u.id_usuario
+        JOIN empresa e ON c.id_empresa = e.id_empresa
+        WHERE p.id_usuario = ?
+        ORDER BY p.fecha_postulacion DESC"
+    );
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    return $resultado->fetch_all(MYSQLI_ASSOC);
+}
+
+
 
 }

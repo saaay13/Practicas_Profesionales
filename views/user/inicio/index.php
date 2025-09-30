@@ -1,3 +1,7 @@
+<?php 
+if (session_status() === PHP_SESSION_NONE) session_start();
+$usuarioId = $_SESSION['id_usuario'] ?? null; 
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -67,8 +71,11 @@
             <span class="inline-block px-3 py-1 text-sm font-medium rounded-full <?= $c['estado']==='abierta'?'bg-green-600':($c['estado']==='cerrada'?'bg-red-600':'bg-gray-500') ?>">
               <?= ucfirst($c['estado']) ?>
             </span>
-            <a href="/login" class="mt-4 inline-block bg-color-4 text-color-1 px-4 py-2 rounded">Postularme</a>
-          </div>
+ <?php if($usuarioId): ?>
+        <a href="/postulacion/crear?id_convocatoria=<?= $c['id_convocatoria'] ?>" class="mt-4 inline-block bg-color-4 text-color-1 px-4 py-2 rounded">Postularme</a>
+    <?php else: ?>
+        <a href="/login" class="mt-4 inline-block bg-color-4 text-color-1 px-4 py-2 rounded">Postularme</a>
+    <?php endif; ?>          </div>
           <?php endforeach; ?>
         </div>
       </div>

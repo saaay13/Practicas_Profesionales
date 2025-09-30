@@ -19,6 +19,8 @@ class UsuarioController {
     }
 
 public static function Crear(Router $router) {
+            \verificarRol(rolesPermitidos: [1]); 
+
     if (session_status() === PHP_SESSION_NONE) session_start();
 
     $usuario = new Usuario();
@@ -33,18 +35,18 @@ public static function Crear(Router $router) {
         $resultado = $usuario->crear();
 
         if ($resultado) {
-$id_usuario = $usuario->id_usuario; // el PK recién creado
-$id_rol = $_POST['usuario']['id_rol']; // este es el ID del rol, no el texto
+$id_usuario = $usuario->id_usuario; 
+$id_rol = $_POST['usuario']['id_rol']; 
 
 if ($id_rol == 4 && isset($_POST['estudiante'])) { 
     $estudiante = new \Model\Estudiante($_POST['estudiante']);
-    $estudiante->id_estudiante = $id_usuario; // FK igual al usuario
+    $estudiante->id_estudiante = $id_usuario; 
     $estudiante->crear();
 }
 
 if ($id_rol == 3 && isset($_POST['egresado'])) { 
     $egresado = new \Model\Egresado($_POST['egresado']);
-    $egresado->id_egresado = $id_usuario; // FK igual al usuario
+    $egresado->id_egresado = $id_usuario; 
     $egresado->crear();
 }
 
@@ -66,7 +68,13 @@ if ($id_rol == 3 && isset($_POST['egresado'])) {
     {
         $router->render("user/nosotros/index");
     }
+     public static function Error(Router $router)
+    {
+        $router->render("error");
+    }
     public static function Editar(Router $router) {
+        \verificarRol(rolesPermitidos: [1]); 
+
     $id_usuario = $_GET['id_usuario'] ?? null;
     if (!$id_usuario) {
         header('Location: /usuario');
@@ -101,6 +109,8 @@ if ($id_rol == 3 && isset($_POST['egresado'])) {
     ]);
 }
 public static function Eliminar(Router $router) {
+    \verificarRol(rolesPermitidos: [1]); 
+
     $id_usuario = $_GET['id_usuario'] ?? null;
     if (!$id_usuario) {
         header('Location: /usuario');

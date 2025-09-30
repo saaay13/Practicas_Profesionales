@@ -1,5 +1,7 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
+$rol = $_SESSION['id_rol'] ?? null;
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -67,15 +69,13 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         <td class="p-4"><?= $e['rubro'] ?></td>
                         <td class="p-4"><?= $e['direccion'] ?></td>
                         <td class="p-4"><?= $e['representante_nombre'] ?> <?= $e['representante_apellido'] ?></td>
-<td class="p-4"><?= $e['cargo_representante'] ?></td>
-<td class="p-4"><?= $e['representante_email'] ?></td>
-<td class="p-4"><?= $e['representante_telefono'] ?></td>
-
-                       
+                        <td class="p-4"><?= $e['cargo_representante'] ?></td>
+                        <td class="p-4"><?= $e['representante_email'] ?></td>
+                        <td class="p-4"><?= $e['representante_telefono'] ?></td>           
                         <td class="p-4 text-center"><?= $e['verificada'] ? 'Sí' : 'No' ?></td>
                         <td class="p-4 text-center">
                             <?php if (!empty($e['imagen'])): ?>
-<img src="/img/empresa/<?= $e['imagen'] ?>" class="h-16 w-16 object-cover rounded-md mx-auto">
+                            <img src="/img/empresa/<?= $e['imagen'] ?>" class="h-16 w-16 object-cover rounded-md mx-auto">
                             <?php else: ?>
                                 Sin imagen
                             <?php endif; ?>

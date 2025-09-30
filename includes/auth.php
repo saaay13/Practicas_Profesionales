@@ -4,7 +4,7 @@ function verificarRol($rolesPermitidos = []) {
         session_start();
     }
     if (!isset($_SESSION['rol']) || !in_array($_SESSION['rol'], $rolesPermitidos)) {
-        header('Location: /error.php');
+        header('Location: /error');
         exit;
     }
 }
