@@ -66,10 +66,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         <td class="p-4"><?= $e['nit'] ?></td>
                         <td class="p-4"><?= $e['rubro'] ?></td>
                         <td class="p-4"><?= $e['direccion'] ?></td>
-                        <td class="p-4"><?= $e['nombre'] ?> <?= $e['apellido'] ?></td>
-                        <td class="p-4"><?= $e['cargo_representante'] ?></td>
-                        <td class="p-4"><?= $e['email'] ?></td>
-                        <td class="p-4"><?= $e['telefono'] ?></td>
+                        <td class="p-4"><?= $e['representante_nombre'] ?> <?= $e['representante_apellido'] ?></td>
+<td class="p-4"><?= $e['cargo_representante'] ?></td>
+<td class="p-4"><?= $e['representante_email'] ?></td>
+<td class="p-4"><?= $e['representante_telefono'] ?></td>
+
+                       
                         <td class="p-4 text-center"><?= $e['verificada'] ? 'Sí' : 'No' ?></td>
                         <td class="p-4 text-center">
                             <?php if (!empty($e['imagen'])): ?>

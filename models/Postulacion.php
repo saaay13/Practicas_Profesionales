@@ -40,8 +40,17 @@ class Postulacion extends ActivaModelo {
             $this->estado = EstadoPostulacion::EN_REVISION;
         }
     }
-
-    public function cambiarEstado(EstadoPostulacion $nuevoEstado): void {
-        $this->estado = $nuevoEstado;
+// En Postulacion.php
+public static function listarAceptadas() {
+    $query = "SELECT * FROM " . static::$tabla . " WHERE estado = 'aceptada'";
+    $resultado = self::$db->query($query);
+    $datos = [];
+    if ($resultado) {
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
     }
+    return $datos;
+}
+
+   
+
 }

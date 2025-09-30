@@ -43,6 +43,10 @@ $router->get('/asistencia/historial', [AsistenciaController::class, 'Historial']
 $router->get('/practica', [PracticaController::class, 'Index']);
 $router->get('/practica/crear', [PracticaController::class, 'Crear']);
 $router->post('/practica/crear', [PracticaController::class, 'Crear']);
+$router->get('/practica/editar', [PracticaController::class, 'Editar']);
+$router->post('/practica/editar', [PracticaController::class, 'Editar']);
+$router->get('/practica/eliminar', [PracticaController::class, 'Eliminar']);
+$router->post('/practica/eliminar', [PracticaController::class, 'Eliminar']);
 
 
 $router->get('/postulacion', [PostulacionController::class, 'Index']);
@@ -51,13 +55,16 @@ $router->post('/postulacion/crear', [PostulacionController::class, 'Crear']);
 $router->get('/postulacion/editar', [PostulacionController::class, 'Editar']);
 $router->post('/postulacion/editar', [PostulacionController::class, 'Editar']);
 $router->get('/postulacion/eliminar', [PostulacionController::class, 'Eliminar']);
-$router->post('/postulacion/eliminar', [PostulacionController::class, 'Eliminar']);
 
 
 $router->get('/estudiante', [EstudianteController::class, 'Index']);
 $router->get('/empresa', [EmpresaController::class, 'Index']);
 $router->get('/empresa/crear', [EmpresaController::class, 'Crear']);
 $router->post('/empresa/crear', [EmpresaController::class, 'Crear']);
+$router->get('/empresa/editar', [EmpresaController::class, 'Editar']);
+$router->post('/empresa/editar', [EmpresaController::class, 'Editar']);
+$router->get('/empresa/eliminar', [EmpresaController::class, 'Eliminar']);
+
 
 $router->get('/egresado', [EgresadoController::class, 'Index']);
 

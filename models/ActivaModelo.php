@@ -10,6 +10,14 @@ class ActivaModelo{
         self::$db = conectarDB();
     }
     
+    public function __construct($args = []) {
+    foreach ($args as $key => $value) {
+        if (property_exists($this, $key)) {
+            $this->$key = $value;
+        }
+    }
+}
+
     public static function listar(){
         $query = "Select * from ".static::$tabla;
         $resultado=self::$db->query($query);
@@ -19,17 +27,37 @@ class ActivaModelo{
         }
         return $producto;
     }
-    public static function listarConUsuario() {
-    $query = "SELECT t.*, u.nombre, u.apellido, u.email, u.telefono
+    public static function listarConUsuarioE() {
+    $query = "SELECT t.*, u.nombre AS representante_nombre, u.apellido AS representante_apellido, 
+                     u.email AS representante_email, u.telefono AS representante_telefono
               FROM " . static::$tabla . " t
-              JOIN usuario u ON t.id_" . static::$tabla . " = u.id_usuario";
+              LEFT JOIN usuario u ON t.id_representante = u.id_usuario";
     $resultado = self::$db->query($query);
     $datos = [];
     if ($resultado) {
         $datos = $resultado->fetch_all(MYSQLI_ASSOC);
     }
     return $datos;
+
+}
+public static function listarConUsuario() {
+    $fk = static::$fk_usuario ?? 'id_usuario'; // cada clase define $fk_usuario
+    $query = "SELECT t.*, 
+                     u.nombre AS usuario_nombre, 
+                     u.apellido AS usuario_apellido, 
+                     u.email AS usuario_email, 
+                     u.telefono AS usuario_telefono
+              FROM " . static::$tabla . " t
+              LEFT JOIN usuario u ON t.$fk = u.id_usuario";
+
+    $resultado = self::$db->query($query);
+    $datos = [];
+    if ($resultado) {
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
     }
+    return $datos;
+}
+
 
     public static function listarConUsuarioGeneral($campoUsuario, $aliasNombre='nombre_usuario', 
     $aliasApellido = 'apellido_usuario', $aliasEmail ="email_usuario") {
@@ -82,25 +110,38 @@ public static function listarConEmpresa() {
     }
     return $datos;
 }
-     public function crear()
-    {
-       $atributos = $this->pasar();
-    $query = " insert into ".static::$tabla." (";
+   public function crear() {
+    $atributos = $this->pasar();
+    $pk = static::$pk ?? 'id_' . static::$tabla;
+    if (isset($atributos[$pk]) && empty($atributos[$pk])) {
+        unset($atributos[$pk]);
+    }
+
+    $query = "INSERT INTO " . static::$tabla . " (";
     $query .= join(",", array_keys($atributos));
-    $query .= ") values ('";
+    $query .= ") VALUES ('";
     $query .= join("','", array_values($atributos));
     $query .= "')";
+    
     $resultado = self::$db->query($query);
-    return $resultado;
-    }
-    public  function pasar ()//separa el key y value
-    {
-        $atributos=$this;
-        $resultado=[];
-        foreach ($this as $key => $value) {
-        if ($value instanceof \UnitEnum) {
-            $value = $value->value;
+    if ($resultado) {
+        if (!isset($this->$pk) || empty($this->$pk)) {
+            $this->$pk = self::$db->insert_id;
         }
+    }
+
+    return $resultado;
+}
+
+    public function pasar() {
+    $resultado = [];
+    foreach ($this as $key => $value) {
+        if ($value instanceof \BackedEnum) {
+            $value = $value->value;
+        } elseif ($value instanceof \UnitEnum) {
+            $value = $value->name;
+        }
+
         // Guardar NULL real en la base de datos
         if ($value === null || $value === '') {
             $resultado[$key] = null;
@@ -109,7 +150,8 @@ public static function listarConEmpresa() {
         }
     }
     return $resultado;
-    }
+}
+
     
 public static function listarAsistencia($id_usuario) {
     $id_usuario = (int)$id_usuario;
@@ -158,31 +200,45 @@ public static function listarAsistencia($id_usuario) {
     return $datos;
 }
 
-    public static function actualizarEstadosGenerales() {
-    $queryPracticas = "UPDATE " . static::$tabla . "
-                       SET estado = 'finalizado'
-                       WHERE estado = 'en_curso' AND horas_cumplidas >= 170";
-    self::$db->query($queryPracticas);
-    $queryConvocatorias = "SELECT id_convocatoria 
-                           FROM convocatoria";
-    $resultado = self::$db->query($queryConvocatorias);
-    if ($resultado) {
-        while ($conv = $resultado->fetch_assoc()) {
-            $id_convocatoria = (int)$conv['id_convocatoria'];
+public static function actualizarConvocatoriaYRechazarOtras($id_postulacion) {
+    $id_postulacion = (int)$id_postulacion;
 
-            $queryPostulaciones = "SELECT COUNT(*) AS total,
-                                          SUM(CASE WHEN estado = 'aceptada' THEN 1 ELSE 0 END) AS aceptadas
-                                   FROM postulacion
-                                   WHERE id_convocatoria = $id_convocatoria";
-            $res = self::$db->query($queryPostulaciones);
-            $datos = $res->fetch_assoc();
-            if ($datos['total'] > 0 && $datos['total'] == $datos['aceptadas']) {
-                $queryUpdate = "UPDATE convocatoria SET estado = 'cerrada' WHERE id_convocatoria = $id_convocatoria";
-                self::$db->query($queryUpdate);
-            }
+    // Obtener la convocatoria asociada
+    $queryConv = "SELECT id_convocatoria FROM postulacion WHERE id_postulacion = $id_postulacion";
+    $resConv = self::$db->query($queryConv);
+
+    if ($resConv && $resConv->num_rows > 0) {
+        $id_convocatoria = (int)$resConv->fetch_assoc()['id_convocatoria'];
+
+        // Verificar si hay al menos una postulacion aceptada
+        $queryCheck = "SELECT COUNT(*) AS aceptadas
+                       FROM postulacion
+                       WHERE id_convocatoria = $id_convocatoria
+                         AND estado = 'aceptada'";
+
+        $resCheck = self::$db->query($queryCheck);
+        $datos = $resCheck->fetch_assoc();
+
+        if ($datos['aceptadas'] > 0) {
+            // Cierra la convocatoria
+            $queryUpdate = "UPDATE convocatoria SET estado = 'cerrada' WHERE id_convocatoria = $id_convocatoria";
+            self::$db->query($queryUpdate);
+
+            // Rechaza las demás postulaciones que no fueron aceptadas
+            $queryRechazar = "UPDATE postulacion 
+                              SET estado = 'rechazada' 
+                              WHERE id_convocatoria = $id_convocatoria 
+                                AND estado != 'aceptada'";
+            self::$db->query($queryRechazar);
+
+        } else {
+            // Si no hay aceptadas, la convocatoria sigue abierta
+            $queryUpdate = "UPDATE convocatoria SET estado = 'abierta' WHERE id_convocatoria = $id_convocatoria";
+            self::$db->query($queryUpdate);
         }
     }
 }
+
 
 public function actualizar() {
     $pk = static::$pk ?? 'id_' . static::$tabla;
@@ -226,6 +282,23 @@ public static function find($id) {
     }
     return null;
 }
+public static function obtenerEncargado($id_postulacion) {
+    $id_postulacion = (int)$id_postulacion;
+
+    $query = "SELECT e.id_representante
+              FROM postulacion p
+              JOIN convocatoria c ON p.id_convocatoria = c.id_convocatoria
+              JOIN empresa e ON c.id_empresa = e.id_empresa
+              WHERE p.id_postulacion = $id_postulacion
+              LIMIT 1";
+
+    $resultado = self::$db->query($query);
+    if ($resultado && $resultado->num_rows > 0) {
+        return (int)$resultado->fetch_assoc()['id_representante'];
+    }
+    return null;
+}
+
 
 
 public function sincronizar($args = []) {
@@ -237,18 +310,25 @@ public function sincronizar($args = []) {
 }
 
 public function eliminar() {
-    $pk = static::$pk ?? 'id_' . static::$tabla; 
+    $pk = static::$pk ?? 'id_' . static::$tabla;
+
     if (!isset($this->$pk)) {
-        throw new \Exception("$pk no está definido");
+        throw new \Exception("No se puede eliminar: $pk no está definido");
     }
 
-    self::$db->query("SET FOREIGN_KEY_CHECKS=0"); // desactiva temporalmente
-    $query = "DELETE FROM " . static::$tabla . " WHERE $pk = '" . self::$db->escape_string((string)$this->$pk) . "' LIMIT 1";
+    // Desactivar temporalmente las restricciones de FK
+    self::$db->query("SET FOREIGN_KEY_CHECKS=0");
+
+    $id = self::$db->real_escape_string((string)$this->$pk);
+    $query = "DELETE FROM " . static::$tabla . " WHERE $pk = '$id' LIMIT 1";
     $resultado = self::$db->query($query);
-    self::$db->query("SET FOREIGN_KEY_CHECKS=1"); // vuelve a activar
+
+    // Volver a activar las restricciones de FK
+    self::$db->query("SET FOREIGN_KEY_CHECKS=1");
 
     return $resultado && self::$db->affected_rows > 0;
 }
+
 
 
 

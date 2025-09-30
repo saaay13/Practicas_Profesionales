@@ -17,25 +17,45 @@ class PracticaController{
          $practica = new Practica();
 
             if ($_SERVER['REQUEST_METHOD'] === "POST") {
-                $practica = new Practica($_POST['practica']);
-                $resultado = $practica->crear(); // Método que guarda la práctica
-                if ($resultado) {
-                    $id_practica = $resultado; 
-                    Practica::actualizarEstadoFinalizado($id_practica);
-                    header('Location: /practica');
-                    exit;
+    $practica = new Practica($_POST['practica']);
+    
+    $id_postulacion = $practica->id_postulacion;
+$id_supervisor = Postulacion::obtenerEncargado($id_postulacion);
+
+if (!$id_supervisor) {
+    echo "No se pudo asignar un encargado a la práctica.";
+    return;
+}
+
+$practica->id_supervisor = $id_supervisor;
+
+            $resultado = $practica->crear();
+            if ($resultado) {
+                $id_practica = $resultado; 
+                Practica::actualizarEstadoFinalizado($id_practica);
+                header('Location: /practica');
+                exit;
+            }
+        }
+
+        $postulacion = Postulacion::listarAceptadas();
+        $usuariosFiltrados = [];
+        if (!empty($postulacion)) {
+            foreach ($postulacion as $p) {
+                $id_representante = Postulacion::obtenerEncargado($p['id_postulacion']);
+                if ($id_representante) {
+                    $usuario = Usuario::find($id_representante);
+                    if ($usuario) $usuariosFiltrados[$p['id_postulacion']] = $usuario;
                 }
             }
-            $postulacion =Postulacion::listar() ;
-            $usuario=Usuario::listarConRol() ;
-            $usuarioFiltrado = array_filter($usuario, function($u) {
-            return strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2;
-            });              
-                 $router->render('practica/crear', [
-                'practica' => $practica,
-                'postulacion'=> $postulacion,
-                'usuario'=> $usuarioFiltrado
-                    ]);
+        }
+            
+        $router->render('practica/crear', [
+            'practica' => $practica,
+            'postulacion'=> $postulacion,
+            'usuario'=> $usuariosFiltrados
+        ]);
+
     }
 
 public static function Editar(Router $router) {
@@ -62,7 +82,7 @@ public static function Editar(Router $router) {
         }
     }
 
-    $postulaciones = Postulacion::listar(); 
+$postulaciones = Postulacion::listarAceptadas();
     $usuarios = Usuario::listarConRol();
     $usuariosFiltrados = array_filter($usuarios, fn($u) => strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2);
 

@@ -41,25 +41,29 @@ if (session_status() === PHP_SESSION_NONE) {
                     class="w-full border border-color-3 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-2 bg-color-5 text-color-1">
                 <option value="">Seleccione una postulación</option>
                 <?php foreach ($postulacion as $p): ?>
-                        <option value="<?= $p['id_postulacion'] ?>">
-                            <?= $p['id_postulacion'] ?>
-                        </option>
-                    <?php endforeach; ?>
+                    <option value="<?= $p['id_postulacion'] ?>">
+                        <?= $p['id_postulacion'] ?> - <?= $p['nombre_usuario'] ?? '' ?> <?= $p['apellido_usuario'] ?? '' ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
         </div>
 
         <div>
-            <label for="id_supervisor" class="block font-medium mb-1 text-color-2">Supervisor:</label>
-            <select id="id_supervisor" name="practica[id_supervisor]" required
-                    class="w-full border border-color-3 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-color-2 bg-color-5 text-color-1">
-                <option value="">Seleccione un supervisor</option>
-                <?php foreach ($usuario as $u): ?>
-                        <option value="<?= $u['id_usuario'] ?>" <?= $u['nombre'] === 'Administrador' ? 'selected' : '' ?>>
-                            <?= $u['nombre'] ?>
-                        </option>
-                    <?php endforeach; ?>
-            </select>
-        </div>
+    <label for="supervisor" class="block font-medium mb-1 text-color-2">Supervisor (Encargado de Empresa):</label>
+    <input type="text" id="supervisor" value="Se asignará automáticamente" readonly
+           class="w-full border border-color-3 rounded px-3 py-2 bg-gray-100 text-gray-600">
+</div>
+
+<script>
+    const selectPostulacion = document.getElementById('id_postulacion');
+    const inputSupervisor = document.getElementById('supervisor');
+
+    selectPostulacion.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const supervisorName = selectedOption.getAttribute('data-supervisor') || 'Sin asignar';
+        inputSupervisor.value = supervisorName;
+    });
+</script>
 
         <div>
             <label for="fecha_inicio" class="block font-medium mb-1 text-color-2">Fecha Inicio:</label>
@@ -77,9 +81,8 @@ if (session_status() === PHP_SESSION_NONE) {
             <label for="horas_requeridas" class="block font-medium mb-1 text-color-2">Horas Requeridas:</label>
             <input type="number" id="horas_requeridas" name="practica[horas_requeridas]" 
                 value="170" readonly
-                class="w-full border border-color-3 rounded px-3 py-2 bg-color-5 text-color-1">
+                class="w-full border border-color-3 rounded px-3 py-2 bg-gray-100 text-gray-600">
         </div>
-
 
         <div>
             <label for="horas_cumplidas" class="block font-medium mb-1 text-color-2">Horas Cumplidas:</label>

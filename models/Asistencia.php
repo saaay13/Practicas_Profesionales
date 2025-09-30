@@ -12,7 +12,7 @@ class Asistencia extends ActivaModelo {
         'verificado_por',
         'observacion'
     ];
-
+    public $id_asistencia;
     public $id_practica;
     public $fecha;
     public $hora_ingreso;
@@ -21,6 +21,7 @@ class Asistencia extends ActivaModelo {
     public $observacion;
 
     public function __construct($args = []) {
+        $this->id_asistencia = $args['id_aistencia'];
         $this->id_practica = $args['id_practica'] ?? null;
         $this->fecha = $args['fecha'] ?? null;
         $this->hora_ingreso = $args['hora_ingreso'] ?? null;

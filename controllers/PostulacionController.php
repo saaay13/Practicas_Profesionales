@@ -69,6 +69,7 @@ class PostulacionController{
         $resultado = $postulacion->actualizar();
 
         if ($resultado) {
+        \Model\ActivaModelo::actualizarConvocatoriaYRechazarOtras($postulacion->id_postulacion);
             header('Location: /postulacion');
             exit;
         }
@@ -89,6 +90,7 @@ class PostulacionController{
         'usuario' => $usuarioFiltrado
     ]);
 }
+
 
 public static function Eliminar(Router $router) {
     $id_postulacion = $_GET['id_postulacion'] ?? null;

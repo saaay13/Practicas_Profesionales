@@ -17,31 +17,50 @@ class UsuarioController {
         ]);
     }
 
-    public static function Crear(Router $router) {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        //\verificarRol([1]); 
-        $usuario = new Usuario();
+public static function Crear(Router $router) {
+    if (session_status() === PHP_SESSION_NONE) session_start();
 
-        if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $usuario = new Usuario($_POST['usuario']);
+    $usuario = new Usuario();
 
-    // Eliminar atributo que no existe en la tabla
-    if (isset($usuario->autenticado)) {
-        unset($usuario->autenticado);
-    }
+    if ($_SERVER['REQUEST_METHOD'] === "POST") {
+        $usuario = new Usuario($_POST['usuario']);
 
-    $resultado = $usuario->crear();
-    if ($resultado) {
-        header('Location: /usuario');
-        exit;
-    }
+        if (isset($usuario->autenticado)) {
+            unset($usuario->autenticado);
+        }
+
+        $resultado = $usuario->crear();
+
+        if ($resultado) {
+$id_usuario = $usuario->id_usuario; // el PK recién creado
+$id_rol = $_POST['usuario']['id_rol']; // este es el ID del rol, no el texto
+
+if ($id_rol == 4 && isset($_POST['estudiante'])) { 
+    $estudiante = new \Model\Estudiante($_POST['estudiante']);
+    $estudiante->id_estudiante = $id_usuario; // FK igual al usuario
+    $estudiante->crear();
 }
-        $rol = Rol::listar();
-        $router->render('usuario/crear', [
-            'usuario' => $usuario,
-            'rol' => $rol
-        ]);
+
+if ($id_rol == 3 && isset($_POST['egresado'])) { 
+    $egresado = new \Model\Egresado($_POST['egresado']);
+    $egresado->id_egresado = $id_usuario; // FK igual al usuario
+    $egresado->crear();
+}
+
+
+
+            header('Location: /usuario');
+            exit;
+        }
     }
+
+    $rol = Rol::listar();
+    $router->render('usuario/crear', [
+        'usuario' => $usuario,
+        'rol' => $rol
+    ]);
+}
+
      public static function Nosotros(Router $router)
     {
         $router->render("user/nosotros/index");

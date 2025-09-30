@@ -16,6 +16,7 @@ class Usuario extends ActivaModelo {
     protected static $errores=[];
 
     public function __construct($args = [],$hashPassword = true) {
+        $this->id_usuario = isset($args['id_usuario']) ??null;
         $this->nombre = $args['nombre'] ?? null;
         $this->apellido = $args['apellido'] ?? null;
         $this->email = $args['email'] ?? null;

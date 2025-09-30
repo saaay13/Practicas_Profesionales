@@ -36,10 +36,20 @@ if (session_status() === PHP_SESSION_NONE) {
     <main class="w-full px-6 py-10">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-3xl font-bold text-color-2">Gestión de Usuarios</h2>
-            <a href="/usuario/crear"
-               class="bg-color-2 text-color-5 px-6 py-3 rounded-lg shadow hover:bg-color-3 transition duration-300">
-                + Nuevo Usuario
-            </a>
+            <div class="flex gap-4">
+                <a href="/usuario/crear"
+                   class="bg-color-2 text-color-5 px-6 py-3 rounded-lg shadow hover:bg-color-3 transition duration-300">
+                    + Nuevo Usuario
+                </a>
+                <a href="/estudiante"
+                   class="bg-color-4 text-color-1 px-6 py-3 rounded-lg shadow hover:bg-color-2 hover:text-color-5 transition duration-300">
+                    Ver Estudiantes
+                </a>
+                <a href="/egresado"
+                   class="bg-color-4 text-color-1 px-6 py-3 rounded-lg shadow hover:bg-color-2 hover:text-color-5 transition duration-300">
+                    Ver Egresados
+                </a>
+            </div>
         </div>
 
         <div class="overflow-x-auto bg-color-5 shadow-lg rounded-xl border border-color-4">

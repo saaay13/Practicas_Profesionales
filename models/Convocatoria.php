@@ -20,7 +20,7 @@ class Convocatoria extends ActivaModelo {
         'estado',
         'imagen'
     ];
-
+    public $id_convocatoria;
     public $id_empresa;
     public $titulo;
     public $descripcion;
@@ -30,6 +30,7 @@ class Convocatoria extends ActivaModelo {
     public EstadoConvocatoria $estado;
     public $imagen ;
       public function __construct($args = []) {
+        $this->id_convocatoria = $args['id_convocatoria'];
         $this->id_empresa = $args['id_empresa'] ?? null;
         $this->titulo = $args['titulo'] ?? null;
         $this->descripcion = $args['descripcion'] ?? null;

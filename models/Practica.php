@@ -11,6 +11,7 @@ class Practica extends ActivaModelo {
     protected static $tabla = 'practica';
     protected static $pk = 'id_practica';
     protected static $columnDB = [
+        'id_practica',
         'id_postulacion',
         'id_supervisor',
         'fecha_inicio',

@@ -15,7 +15,7 @@ class Empresa extends ActivaModelo {
         'imagen'
 
     ];
-
+    public $id_empresa;
     public $nombre_empresa;
     public $nit;
     public $rubro;
@@ -26,6 +26,8 @@ class Empresa extends ActivaModelo {
     public $imagen;
 
     public function __construct($args = []) {
+        $this->id_empresa = $args['id_empresa'] ?? null;
+
         $this->nombre_empresa = $args['nombre_empresa'] ?? null;
         $this->nit = $args['nit'] ?? null;
         $this->rubro = $args['rubro'] ?? null;

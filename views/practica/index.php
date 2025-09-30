@@ -44,6 +44,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
             <thead class="bg-color-3 text-color-5">
                 <tr>
                     <th class="p-4 text-left">ID</th>
+                    <th class="p-4 text-left">ID Postulante</th>
                     <th class="p-4 text-left">Supervisor</th>
                     <th class="p-4 text-left">Fecha Inicio</th>
                     <th class="p-4 text-left">Fecha Fin</th>
@@ -57,6 +58,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
             <?php foreach ($practica as $p): ?>
                 <tr class="border-b hover:bg-color-5 transition">
                     <td class="p-4"><?= $p['id_practica'] ?></td>
+                    <td class="p-4"><?= $p['id_postulacion'] ?></td>
 <td class="p-4"><?= $p['supervisor_nombre'] ?? '-' ?> <?= $p['supervisor_apellido'] ?? '' ?></td>
                     <td class="p-4"><?= $p['fecha_inicio'] ?? '-' ?></td>
                     <td class="p-4"><?= $p['fecha_fin'] ?? '-' ?></td>

@@ -74,6 +74,7 @@
             <h2 class="text-xl font-semibold mb-2"><?= $e['nombre_empresa'] ?></h2>
             <p class="text-color-3 mb-1"><strong>Rubro:</strong> <?= $e['rubro'] ?></p>
             <p class="text-color-3 mb-1"><strong>Dirección:</strong> <?= $e['direccion'] ?></p>
+
         </div>
     </div>
     <?php endforeach; ?>

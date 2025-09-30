@@ -84,6 +84,50 @@ if (session_status() === PHP_SESSION_NONE) {
                     Crear Usuario
                 </button>
             </div>
+            <!-- Campos adicionales dinámicos -->
+<div id="campos-estudiante" class="hidden md:col-span-2 mt-4 bg-color-4 p-4 rounded">
+    <h3 class="font-bold mb-2 text-color-1">Datos Estudiante</h3>
+    <div class="mb-2">
+        <label class="text-color-2">Carrera:</label>
+        <input type="text" name="estudiante[carrera]" class="w-full border rounded px-2 py-1">
+    </div>
+    <div class="mb-2">
+        <label class="text-color-2">Semestre:</label>
+        <input type="number" name="estudiante[semestre]" class="w-full border rounded px-2 py-1">
+    </div>
+    <div class="mb-2">
+        <label class="text-color-2">Matrícula:</label>
+        <input type="text" name="estudiante[matricula]" class="w-full border rounded px-2 py-1">
+    </div>
+</div>
+
+<div id="campos-egresado" class="hidden md:col-span-2 mt-4 bg-color-4 p-4 rounded">
+    <h3 class="font-bold mb-2 text-color-1">Datos Egresado</h3>
+    <div class="mb-2">
+        <label class="text-color-2">Carrera:</label>
+        <input type="text" name="egresado[carrera]" class="w-full border rounded px-2 py-1">
+    </div>
+    <div class="mb-2">
+        <label class="text-color-2">Año de Egreso:</label>
+        <input type="number" name="egresado[anio_egreso]" class="w-full border rounded px-2 py-1">
+    </div>
+</div>
+
+<script>
+const rolSelect = document.getElementById('id_rol');
+const estudianteDiv = document.getElementById('campos-estudiante');
+const egresadoDiv = document.getElementById('campos-egresado');
+
+rolSelect.addEventListener('change', () => {
+    const rolTexto = rolSelect.options[rolSelect.selectedIndex].text.toLowerCase();
+    estudianteDiv.classList.add('hidden');
+    egresadoDiv.classList.add('hidden');
+
+    if (rolTexto === 'estudiante') estudianteDiv.classList.remove('hidden');
+    if (rolTexto === 'egresado') egresadoDiv.classList.remove('hidden');
+});
+</script>
+
         </form>
     </div>
 </body>

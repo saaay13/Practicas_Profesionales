@@ -1,11 +1,12 @@
 <?php
 namespace Controllers;
-use Model\Egresado; 
+use Model\Egresado;
 use MVC\Router;
-class EgresadoController{
+
+class EgresadoController {
     public static function Index(Router $router){   
         $egresado = Egresado::listarConUsuario();
-        $router->render('egresado/index',[
+        $router->render('egresado/index', [
             'egresado' => $egresado
         ]);
     }
