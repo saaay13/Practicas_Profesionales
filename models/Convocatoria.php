@@ -10,16 +10,17 @@ enum EstadoConvocatoria: string {
 class Convocatoria extends ActivaModelo {
     protected static $tabla = 'convocatoria';
     protected static $columnDB = [
-        'id_convocatoria',
-        'id_empresa',
-        'titulo',
-        'descripcion',
-        'requisitos',
-        'fecha_publicacion',
-        'fecha_cierre',
-        'estado',
-        'imagen'
-    ];
+    'id_convocatoria',
+    'id_empresa',
+    'titulo',
+    'descripcion',
+    'requisitos',
+    'fecha_publicacion',
+    'fecha_cierre',
+    'estado',
+    'imagen'
+];
+
     public $id_convocatoria;
     public $id_empresa;
     public $titulo;
@@ -30,15 +31,13 @@ class Convocatoria extends ActivaModelo {
     public EstadoConvocatoria $estado;
     public $imagen ;
       public function __construct($args = []) {
-        $this->id_convocatoria = $args['id_convocatoria'];
+        $this->id_convocatoria = $args['id_convocatoria']?? null;
         $this->id_empresa = $args['id_empresa'] ?? null;
         $this->titulo = $args['titulo'] ?? null;
         $this->descripcion = $args['descripcion'] ?? null;
         $this->requisitos = $args['requisitos'] ?? null;
         $this->fecha_publicacion = $args['fecha_publicacion'] ?? date("Y-m-d");
         $this->fecha_cierre = $args['fecha_cierre'] ?? null;
-
-        // ✅ conversión segura de string a enum
         if (isset($args['estado'])) {
             if ($args['estado'] instanceof EstadoConvocatoria) {
                 $this->estado = $args['estado']; // ya es enum
@@ -71,11 +70,12 @@ class Convocatoria extends ActivaModelo {
     }
 }
 
-    public function setImagen ($imagen){
+public function setImagen ($imagen){
         {
             $this->imagen = $imagen;
         }
 
     }
+
 }
 ?>

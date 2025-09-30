@@ -1,6 +1,7 @@
 <?php
 namespace Controllers;
 
+use Model\Convocatoria;
 use Model\Usuario;
 use Model\Rol;
 use MVC\Router;
@@ -65,5 +66,70 @@ if ($id_rol == 3 && isset($_POST['egresado'])) {
     {
         $router->render("user/nosotros/index");
     }
-    
+    public static function Editar(Router $router) {
+    $id_usuario = $_GET['id_usuario'] ?? null;
+    if (!$id_usuario) {
+        header('Location: /usuario');
+        exit;
+    }
+
+    $usuario = Usuario::find($id_usuario);
+    if (!$usuario) {
+        header('Location: /usuario');
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === "POST") {
+        $data = $_POST['usuario'];
+
+        unset($data['id_rol']);
+
+        $usuario->sincronizar($data);
+        $resultado = $usuario->actualizar();
+
+        if ($resultado) {
+            header('Location: /usuario');
+            exit;
+        }
+    }
+
+    $rol = Rol::listar();
+
+    $router->render('usuario/editar', [
+        'usuario' => $usuario,
+        'rol' => $rol
+    ]);
+}
+public static function Eliminar(Router $router) {
+    $id_usuario = $_GET['id_usuario'] ?? null;
+    if (!$id_usuario) {
+        header('Location: /usuario');
+        exit;
+    }
+
+    $usuario = Usuario::find($id_usuario);
+    if (!$usuario) {
+        header('Location: /usuario');
+        exit;
+    }
+
+    try {
+        $eliminado = $usuario->eliminar();
+
+        if ($eliminado) {
+            $_SESSION['mensaje'] = "Usuario eliminado correctamente";
+            header('Location: /usuario');
+            exit;
+        } else {
+            $_SESSION['error'] = "No se pudo eliminar el usuario";
+            header('Location: /usuario');
+            exit;
+        }
+    } catch (\Exception $e) {
+        $_SESSION['error'] = "Error al eliminar el usuario: " . $e->getMessage();
+        header('Location: /usuario');
+        exit;
+    }
+}
+
 }

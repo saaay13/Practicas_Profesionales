@@ -99,6 +99,7 @@ public static function listarConEmpresa() {
                      c.fecha_publicacion,
                      c.fecha_cierre,
                      c.estado,
+                     c.imagen,
                      e.nombre_empresa
               FROM convocatoria c
               JOIN empresa e ON c.id_empresa = e.id_empresa
@@ -110,6 +111,7 @@ public static function listarConEmpresa() {
     }
     return $datos;
 }
+
    public function crear() {
     $atributos = $this->pasar();
     $pk = static::$pk ?? 'id_' . static::$tabla;
@@ -133,16 +135,19 @@ public static function listarConEmpresa() {
     return $resultado;
 }
 
-    public function pasar() {
+public function pasar() {
     $resultado = [];
+    $excluir = ['autenticado']; // <- aquí puedes añadir otras propiedades que no estén en la DB
+
     foreach ($this as $key => $value) {
+        if (in_array($key, $excluir)) continue;
+
         if ($value instanceof \BackedEnum) {
             $value = $value->value;
         } elseif ($value instanceof \UnitEnum) {
             $value = $value->name;
         }
 
-        // Guardar NULL real en la base de datos
         if ($value === null || $value === '') {
             $resultado[$key] = null;
         } else {
@@ -151,6 +156,7 @@ public static function listarConEmpresa() {
     }
     return $resultado;
 }
+
 
     
 public static function listarAsistencia($id_usuario) {
@@ -316,23 +322,63 @@ public function eliminar() {
         throw new \Exception("No se puede eliminar: $pk no está definido");
     }
 
-    // Desactivar temporalmente las restricciones de FK
-    self::$db->query("SET FOREIGN_KEY_CHECKS=0");
-
     $id = self::$db->real_escape_string((string)$this->$pk);
     $query = "DELETE FROM " . static::$tabla . " WHERE $pk = '$id' LIMIT 1";
+
     $resultado = self::$db->query($query);
 
-    // Volver a activar las restricciones de FK
-    self::$db->query("SET FOREIGN_KEY_CHECKS=1");
+    if (!$resultado) {
+        throw new \Exception("Error MySQL: " . self::$db->error);
+    }
 
     return $resultado && self::$db->affected_rows > 0;
 }
+public function eliminarEnCascada() {
+    $pk = static::$pk ?? 'id_' . static::$tabla;
 
+    if (!isset($this->$pk)) {
+        echo "Error: clave primaria $pk no definida";
+        return false;
+    }
 
+    $id = self::$db->real_escape_string((string)$this->$pk);
 
+    // Tablas hijas
+    if (!empty(static::$tablas_hijas)) {
+        foreach (static::$tablas_hijas as $tabla => $columna) {
+            // Mostrar qué tabla y columna se va a borrar
+            echo "Intentando borrar de $tabla donde $columna = $id<br>";
 
+            $query_check = "SHOW TABLES LIKE '$tabla'";
+            $res_check = self::$db->query($query_check);
+            if ($res_check && $res_check->num_rows > 0) {
+                $query = "DELETE FROM `$tabla` WHERE `$columna` = '$id'";
+                echo "Consulta: $query<br>";
+                if (!self::$db->query($query)) {
+                    echo "Error MySQL en tabla $tabla: " . self::$db->error . "<br>";
+                } else {
+                    echo "Filas eliminadas en $tabla: " . self::$db->affected_rows . "<br>";
+                }
+            } else {
+                echo "Tabla $tabla no existe<br>";
+            }
+        }
+    }
 
+    // Eliminar el registro principal
+    $query = "DELETE FROM `" . static::$tabla . "` WHERE `$pk` = '$id' LIMIT 1";
+    echo "Eliminando usuario con consulta: $query<br>";
+
+    $resultado = self::$db->query($query);
+
+    if (!$resultado) {
+        echo "Error MySQL al eliminar usuario: " . self::$db->error . "<br>";
+        return false;
+    }
+
+    echo "Usuario eliminado: " . self::$db->affected_rows . " fila(s)<br>";
+    return $resultado && self::$db->affected_rows > 0;
+}
 
 
     

@@ -8,6 +8,7 @@ $links = [
         ['url'=>'/convocatoria','label'=>'Convocatorias'],
         ['url'=>'/postulacion','label'=>'Postulaciones'],
         ['url'=>'/practica','label'=>'Prácticas'],
+        ['url'=>'/asistencia','label'=>'Asistencia'],
         ['url'=>'/mensaje/index','label'=>'Mesaje'],
     ],
     2 => [
@@ -83,7 +84,9 @@ $links = [
             <a href="/empresa/panel" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Empresa</a>
             <a href="/user/convocatoria" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Convocatorias</a>
             <a href="/nosotros" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Nosotros</a>
+            <a href="/contacto/crear" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Contacto</a>
             <a href="/login" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Login</a>
+
         <?php endif; ?>
     </div>
 </div>
@@ -92,20 +95,64 @@ $links = [
 <main class="flex-grow w-full">
     <?php echo $contenido ?>
 </main>
-
-<footer class="gradient-color text-color-5 shadow-lg">
+<br>
+<br>
+<footer class="bg-color-1 text-color-5 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-            <p class="text-sm">&copy; <?php echo date("Y"); ?> MiSitio. Todos los derechos reservados.</p>
-            <div class="flex space-x-6 mt-4 md:mt-0">
-                <a href="#" class="hover-text-color-4 transition duration-300">Facebook</a>
-                <a href="#" class="hover-text-color-4 transition duration-300">Twitter</a>
-                <a href="#" class="hover-text-color-4 transition duration-300">Instagram</a>
-                <a href="#" class="hover-text-color-4 transition duration-300">LinkedIn</a>
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0">
+
+            <!-- Logo y descripción -->
+            <div class="flex items-center space-x-4">
+        <a href="/"><img src="/img/logoSF.png" alt="Logo" class="h-10 w-10 object-contain"></a>
+                <p class="text-sm">MiSitio - Conectando estudiantes y empresas</p>
             </div>
+
+            <!-- Menú dinámico según usuario -->
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 text-sm">
+                <?php if (isset($_SESSION['usuario'])): ?>
+                    <?php $rol = $_SESSION['usuario']['rol']; ?>
+                    <a href="/inicio" class="hover:text-color-4 transition">Inicio</a>
+                    <?php if ($rol === 'empresa'): ?>
+                        <a href="/empresa" class="hover:text-color-4 transition">Panel Empresa</a>
+                        <a href="/practicas" class="hover:text-color-4 transition">Prácticas</a>
+                    <?php elseif ($rol === 'estudiante'): ?>
+                        <a href="/convocatorias" class="hover:text-color-4 transition">Convocatorias</a>
+                        <a href="/practicas" class="hover:text-color-4 transition">Mis Prácticas</a>
+                    <?php elseif ($rol === 'admin'): ?>
+                        <a href="/usuarios" class="hover:text-color-4 transition">Usuarios</a>
+                        <a href="/empresas" class="hover:text-color-4 transition">Empresas</a>
+                        <a href="/practicas" class="hover:text-color-4 transition">Prácticas</a>
+                    <?php endif; ?>
+                    <a href="/logout" class="hover:text-color-4 transition">Cerrar Sesión</a>
+                <?php else: ?>
+                    <a href="/empresa/panel" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Empresa</a>
+                    <a href="/user/convocatoria" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Convocatorias</a>
+                    <a href="/nosotros" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Nosotros</a>
+                    <a href="/contacto/crear" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Contacto</a>
+                    <a href="/login" class="px-3 py-2 rounded hover-bg-color-3 transition duration-300">Login</a>
+                <?php endif; ?>
+            </div>
+
+            <!-- Redes sociales -->
+            <div class="flex space-x-4 mt-4 md:mt-0">
+                <a href="#" class="hover:text-color-4 transition" aria-label="Facebook">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 5.004 3.657 9.128 8.438 9.876v-6.987h-2.54v-2.89h2.54V9.797c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.463h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.343 21.128 22 17.004 22 12z"/></svg>
+                </a>
+                <a href="#" class="hover:text-color-4 transition" aria-label="Twitter">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.162 5.656c-.793.352-1.644.588-2.538.694a4.456 4.456 0 001.955-2.458 8.91 8.91 0 01-2.823 1.08 4.448 4.448 0 00-7.58 4.054A12.62 12.62 0 013.15 4.92a4.447 4.447 0 001.377 5.93 4.435 4.435 0 01-2.016-.558v.056a4.45 4.45 0 003.563 4.356 4.43 4.43 0 01-2.012.077 4.451 4.451 0 004.155 3.08 8.91 8.91 0 01-5.514 1.9A8.97 8.97 0 012 19.54a12.558 12.558 0 006.82 2"/></svg>
+                </a>
+                <a href="#" class="hover:text-color-4 transition" aria-label="Instagram">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm0 2h10a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3V7a3 3 0 013-3zm8 1a1 1 0 100 2 1 1 0 000-2zM12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
+                </a>
+                <a href="#" class="hover:text-color-4 transition" aria-label="LinkedIn">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5C3.34 3.5 2 4.84 2 6.48s1.34 2.98 2.98 2.98 2.98-1.34 2.98-2.98S6.62 3.5 4.98 3.5zM2.4 9h5.16V21H2.4V9zm7.12 0h4.92v1.66h.07c.69-1.3 2.38-2.68 4.9-2.68 5.24 0 6.2 3.45 6.2 7.93V21h-5.16v-6.87c0-1.64-.03-3.75-2.28-3.75-2.28 0-2.63 1.78-2.63 3.62V21H9.52V9z"/></svg>
+                </a>
+            </div>
+
         </div>
     </div>
 </footer>
+
 
 <script>
     const btn = document.getElementById('menu-btn');

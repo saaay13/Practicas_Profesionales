@@ -100,24 +100,28 @@ public static function Eliminar(Router $router) {
     }
 
     $postulacion = Postulacion::find($id_postulacion);
-    if ($postulacion) {
-        try {
-            // Se intenta eliminar solo la postulación
-            $eliminado = $postulacion->eliminar();
-            if ($eliminado) {
-                header('Location: /postulacion');
-                exit;
-            } else {
-                echo "No se pudo eliminar la postulación. Asegúrate de que no tenga prácticas asociadas.";
-            }
-        } catch (\mysqli_sql_exception $e) {
-            echo "No se puede eliminar la postulación porque tiene registros relacionados: " . $e->getMessage();
+    if (!$postulacion) {
+        header('Location: /postulacion');
+        exit;
+    }
+
+    try {
+        $eliminado = $postulacion->eliminar();
+
+        if ($eliminado) {
+            $_SESSION['mensaje'] = "Postulacion eliminada correctamente";
+            header('Location: /postulacion');
+            exit;
+        } else {
+            $_SESSION['error'] = "No se pudo eliminar el postulacion";
+            header('Location: /postulacion');
+            exit;
         }
-    } else {
+    } catch (\Exception $e) {
+        $_SESSION['error'] = "Error al eliminar el otros: " . $e->getMessage();
         header('Location: /postulacion');
         exit;
     }
 }
-
 }
 ?>

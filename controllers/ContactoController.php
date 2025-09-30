@@ -27,8 +27,10 @@ public static function Crear(Router $router)
         if (isset($_SESSION['id_usuario'])) {
             $datos['id_usuario'] = $_SESSION['id_usuario'];
         } else {
-            die("Debes iniciar sesión para enviar un contacto.");
-        }
+                
+            header('Location: /login');
+            exit;    
+            }
         $contacto = new Contacto($datos);
         $resultado = $contacto->crear();
         if ($resultado) {
@@ -41,6 +43,7 @@ public static function Crear(Router $router)
         'contacto' => $contacto,
     ]);
 }
+
 
    
 }

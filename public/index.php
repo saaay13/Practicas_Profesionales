@@ -36,6 +36,9 @@ $router->get('/rol', [RolController::class, 'Index']);
 $router->get('/usuario', [UsuarioController::class, 'Index']);
 $router->get('/usuario/crear', [UsuarioController::class, 'Crear']);
 $router->post('/usuario/crear', [UsuarioController::class, 'Crear']);
+$router->get('/usuario/editar', [UsuarioController::class, 'Editar']);
+$router->post('/usuario/editar', [UsuarioController::class, 'Editar']);
+$router->get('/usuario/eliminar', [UsuarioController::class, 'Eliminar']);
 
 $router->get('/asistencia/historial', [AsistenciaController::class, 'Historial']);
 
@@ -46,7 +49,6 @@ $router->post('/practica/crear', [PracticaController::class, 'Crear']);
 $router->get('/practica/editar', [PracticaController::class, 'Editar']);
 $router->post('/practica/editar', [PracticaController::class, 'Editar']);
 $router->get('/practica/eliminar', [PracticaController::class, 'Eliminar']);
-$router->post('/practica/eliminar', [PracticaController::class, 'Eliminar']);
 
 
 $router->get('/postulacion', [PostulacionController::class, 'Index']);
@@ -58,6 +60,9 @@ $router->get('/postulacion/eliminar', [PostulacionController::class, 'Eliminar']
 
 
 $router->get('/estudiante', [EstudianteController::class, 'Index']);
+$router->get('/estudiante/editar', [EstudianteController::class, 'Editar']);
+$router->post('/estudiante/editar', [EstudianteController::class, 'Editar']);
+
 $router->get('/empresa', [EmpresaController::class, 'Index']);
 $router->get('/empresa/crear', [EmpresaController::class, 'Crear']);
 $router->post('/empresa/crear', [EmpresaController::class, 'Crear']);
@@ -67,14 +72,25 @@ $router->get('/empresa/eliminar', [EmpresaController::class, 'Eliminar']);
 
 
 $router->get('/egresado', [EgresadoController::class, 'Index']);
+$router->get('/egresado/editar', [EgresadoController::class, 'Editar']);
+$router->post('/egresado/editar', [EgresadoController::class, 'Editar']);
+
+
 
 $router->get('/convocatoria', [ConvocatoriaController::class, 'Index']);
 $router->get('/convocatoria/crear', [ConvocatoriaController::class, 'Crear']);
 $router->post('/convocatoria/crear', [ConvocatoriaController::class, 'Crear']);
+$router->get('/convocatoria/editar', [ConvocatoriaController::class, 'Editar']);
+$router->post('/convocatoria/editar', [ConvocatoriaController::class, 'Editar']);
+$router->get('/convocatoria/eliminar', [ConvocatoriaController::class, 'Eliminar']);
 
 $router->get('/asistencia', [AsistenciaController::class, 'Index']);
 $router->get('/asistencia/crear', [AsistenciaController::class, 'Crear']);
 $router->post('/asistencia/crear', [AsistenciaController::class, 'Crear']);
+$router->get('/asistencia/editar', [AsistenciaController::class, 'Editar']);
+$router->post('/asistencia/editar', [AsistenciaController::class, 'Editar']);
+$router->get('/asistencia/eliminar', [AsistenciaController::class, 'Eliminar']);
+
 
 $router->ComprobarRutas();
 

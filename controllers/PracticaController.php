@@ -94,28 +94,37 @@ $postulaciones = Postulacion::listarAceptadas();
 }
 
 
-    public static function Eliminar(Router $router) {
-        $id_practica = $_GET['id_practica'] ?? null;
-        if (!$id_practica) {
-            header('Location: /practica');
-            exit;
-        }
-
-        $practica = Practica::find($id_practica);
-        if ($practica) {
-            $eliminado = $practica->eliminar();
-            if ($eliminado) {
-                header('Location: /practica');
-                exit;
-            } else {
-                echo "No se pudo eliminar la práctica";
-            }
-        } else {
-            header('Location: /practica');
-            exit;
-        }
+   public static function Eliminar(Router $router) {
+    $id_practica = $_GET['id_practica'] ?? null;
+    if (!$id_practica) {
+        header('Location: /practica');
+        exit;
     }
 
+    $practica = Practica::find($id_practica);
+    if (!$practica) {
+        header('Location: /practica');
+        exit;
+    }
+
+    try {
+        $eliminado = $practica->eliminar();
+
+        if ($eliminado) {
+            $_SESSION['mensaje'] = "Practica eliminada correctamente";
+            header('Location: /practica');
+            exit;
+        } else {
+            $_SESSION['error'] = "No se pudo eliminar el usuario";
+            header('Location: /practica');
+            exit;
+        }
+    } catch (\Exception $e) {
+        $_SESSION['error'] = "Error al eliminar el otros: " . $e->getMessage();
+        header('Location: /practica');
+        exit;
+    }
+}
 
 }
 

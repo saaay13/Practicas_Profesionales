@@ -65,11 +65,11 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         <td class="p-4"><?= $a['nombre_verificador'] ?? $a['verificado_por'] ?> <?= $a['apellido_verificador'] ?? '' ?></td>
                         <td class="p-4"><?= $a['observacion'] ?? '-' ?></td>
                         <td class="p-4 text-center flex gap-2 justify-center">
-                            <a href="/asistencia/editar?id=<?= $a['id_asistencia'] ?>"
+                            <a href="/asistencia/editar?id_asistencia=<?= $a['id_asistencia'] ?>"
                                class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
                                Editar
                             </a>
-                            <a href="/asistencia/eliminar?id=<?= $a['id_asistencia'] ?>"
+                            <a href="/asistencia/eliminar?id_asistencia=<?= $a['id_asistencia'] ?>"
                                class="px-3 py-1 bg-red-600 text-color-5 rounded-md hover:bg-red-700 transition"
                                onclick="return confirm('¿Seguro que deseas eliminar esta asistencia?')">
                                Eliminar

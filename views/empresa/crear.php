@@ -85,7 +85,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <div>
             <label for="imagen" class="block font-medium mb-1 text-color-2">Imagen de la Empresa:</label>
-            <input type="file" id="imagen" name="empresa[imagen]" accept="image/*"
+           <input type="file" id="imagen" name="imagen" accept="image/*"
+
                    class="w-full border border-color-3 rounded px-3 py-2 bg-color-5 text-color-1">
         </div>
 

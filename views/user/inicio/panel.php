@@ -62,7 +62,7 @@
     <div class="card rounded-xl shadow-md overflow-hidden hover-shadow-md">
         <!-- Imagen de la empresa -->
         <?php if(!empty($e['imagen'])): ?>
-        <img src="<?= $e['imagen'] ?>" alt="<?= $e['nombre_empresa'] ?>" class="w-full h-52 object-cover">
+          <img src="/img/empresa/<?= $e['imagen'] ?>" alt="<?= $e['nombre_empresa'] ?>" class="w-full h-48 object-cover rounded mb-4">
         <?php else: ?>
         <div class="w-full h-52 bg-gray-200 flex items-center justify-center text-gray-500">
             Sin imagen
@@ -72,10 +72,14 @@
         <!-- Información de la empresa -->
         <div class="p-4">
             <h2 class="text-xl font-semibold mb-2"><?= $e['nombre_empresa'] ?></h2>
+            <p class="text-sm mb-1 text-color-3"><strong>NIT:</strong> <?= $e['nit'] ?></p>
             <p class="text-color-3 mb-1"><strong>Rubro:</strong> <?= $e['rubro'] ?></p>
             <p class="text-color-3 mb-1"><strong>Dirección:</strong> <?= $e['direccion'] ?></p>
-
-        </div>
+            <p class="text-sm mb-1 text-color-3"><strong>Representante:</strong> <?= $e['representante_nombre'] ?> <?= $e['representante_apellido'] ?> (<?= $e['cargo_representante'] ?>)</p>
+            <p class="text-sm mb-1 text-color-3"><strong>Email:</strong> <?= $e['representante_email'] ?></p>
+            <p class="text-sm mb-1 text-color-3"><strong>Teléfono:</strong> <?= $e['representante_telefono'] ?></p>
+            <p class="mt-2 text-sm <?= $e['verificada'] ? 'text-green-600' : 'text-red-600' ?>"><?= $e['verificada'] ? 'Verificada' : 'No verificada' ?></p>
+            </div>
     </div>
     <?php endforeach; ?>
 </div>

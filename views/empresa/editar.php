@@ -1,5 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -88,15 +90,13 @@ if (session_status() === PHP_SESSION_NONE) session_start();
             <label for="verificada" class="text-color-2 font-medium">Empresa Verificada</label>
         </div>
 
-        <div>
+       <div>
             <label for="imagen" class="block font-medium mb-1 text-color-2">Imagen de la Empresa:</label>
-            <input type="file" id="imagen" name="empresa[imagen]" accept="image/*"
+           <input type="file" id="imagen" name="imagen" accept="image/*"
+
                    class="w-full border border-color-3 rounded px-3 py-2 bg-color-5 text-color-1">
-            <?php if (!empty($empresa->imagen)): ?>
-                <p class="mt-2 text-color-3">Imagen actual:</p>
-                <img src="/img/<?= htmlspecialchars($empresa->imagen) ?>" class="h-20 w-20 object-cover rounded-md mt-1">
-            <?php endif; ?>
         </div>
+
 
         <div class="md:col-span-2">
             <button type="submit"

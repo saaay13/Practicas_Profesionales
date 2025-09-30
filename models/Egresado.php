@@ -5,6 +5,7 @@ class Egresado extends ActivaModelo {
     protected static $tabla = 'egresado';
     protected static $fk_usuario = 'id_egresado';
 
+protected static $pk = 'id_egresado';
 
     protected static $columnDB = [
         'id_egresado',

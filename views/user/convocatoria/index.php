@@ -64,12 +64,10 @@
     <?php foreach ($convocatoria as $c): ?>
     <div class="card rounded-xl shadow-md overflow-hidden hover-shadow-md">
         <?php if(!empty($c['imagen'])): ?>
-        <img src="<?= $c['imagen'] ?>" alt="<?= $c['titulo'] ?>" class="w-full h-48 object-cover">
-        <?php else: ?>
-        <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
-            Sin imagen
-        </div>
-        <?php endif; ?>
+               <img src="/img/convocatoria/<?= $c['imagen'] ?>" class="w-full h-48 object-cover mb-4 rounded">
+            <?php else: ?>
+              <div class="w-full h-48 bg-color-1 mb-4 flex items-center justify-center text-gray-300 rounded">Sin imagen</div>
+            <?php endif; ?>
         <div class="p-4">
             <h2 class="text-xl font-semibold mb-2"><?= $c['titulo'] ?></h2>
             <p class="mb-1"><strong>Empresa:</strong> <?= $c['nombre_empresa'] ?? $c['id_empresa'] ?></p>
@@ -80,6 +78,7 @@
             <span class="inline-block px-3 py-1 text-sm font-medium rounded-full <?= $c['estado']==='abierta'?'estado-abierta':($c['estado']==='cerrada'?'estado-cerrada':'estado-cancelada') ?>">
                 <?= ucfirst($c['estado']) ?>
             </span>
+            <a href="/login" class="mt-2 inline-block bg-color-4 text-color-1 px-4 py-2 rounded">Postularme</a>
         </div>
     </div>
     <?php endforeach; ?>

@@ -1,3 +1,6 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -54,7 +57,7 @@
                     <td class="border-b p-3"><?= $e['carrera'] ?></td>
                     <td class="border-b p-3"><?= $e['anio_egreso'] ?></td>
                     <td class="border-b p-3 text-center flex gap-2 justify-center">
-                        <a href="/egresado/editar?id=<?= $e['id_egresado'] ?>"
+                        <a href="/egresado/editar?id_egresado=<?= $e['id_egresado'] ?>"
                            class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
                            Editar
                         </a>

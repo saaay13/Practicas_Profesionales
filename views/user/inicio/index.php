@@ -55,7 +55,7 @@
           <?php foreach ($convocatoria as $c): ?>
           <div class="bg-color-2 p-4 rounded-lg shadow-md hover-shadow-md">
             <?php if(!empty($c['imagen'])): ?>
-              <img src="<?= $c['imagen'] ?>" alt="<?= $c['titulo'] ?>" class="w-full h-48 object-cover mb-4 rounded">
+               <img src="/img/convocatoria/<?= $c['imagen'] ?>" class="w-full h-48 object-cover mb-4 rounded">
             <?php else: ?>
               <div class="w-full h-48 bg-color-1 mb-4 flex items-center justify-center text-gray-300 rounded">Sin imagen</div>
             <?php endif; ?>
@@ -67,7 +67,7 @@
             <span class="inline-block px-3 py-1 text-sm font-medium rounded-full <?= $c['estado']==='abierta'?'bg-green-600':($c['estado']==='cerrada'?'bg-red-600':'bg-gray-500') ?>">
               <?= ucfirst($c['estado']) ?>
             </span>
-            <a href="#" class="mt-4 inline-block bg-color-4 text-color-1 px-4 py-2 rounded">Ver más</a>
+            <a href="/login" class="mt-4 inline-block bg-color-4 text-color-1 px-4 py-2 rounded">Postularme</a>
           </div>
           <?php endforeach; ?>
         </div>
@@ -75,30 +75,43 @@
     </section>
 
     <!-- Empresas destacadas -->
-    <section class="py-12 bg-color-5 text-color-1">
-      <h2 class="text-2xl font-bold text-center mb-8">Empresas Destacadas</h2>
-      <div class="px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <?php foreach($empresa as $e): ?>
-        <div class="bg-color-2 text-color-5 p-4 rounded-lg shadow-md hover-shadow-md">
-          <?php if(!empty($e['imagen'])): ?>
-            <img src="<?= $e['imagen'] ?>" alt="<?= $e['nombre_empresa'] ?>" class="w-full h-52 object-cover mb-4 rounded">
-          <?php else: ?>
-            <div class="w-full h-52 bg-color-1 mb-4 flex items-center justify-center text-gray-300 rounded">Sin imagen</div>
-          <?php endif; ?>
-          <h3 class="text-lg font-bold mb-2 text-color-4"><?= $e['nombre_empresa'] ?></h3>
-          <p class="text-sm mb-1 text-color-5"><strong>Rubro:</strong> <?= $e['rubro'] ?></p>
-          <p class="text-sm mb-1 text-color-5"><strong>Dirección:</strong> <?= $e['direccion'] ?></p>
-          <p class="text-sm mb-1 text-color-5"><strong>Representante:</strong> <?= $e['nombre'] ?> (<?= $e['cargo_representante'] ?>)</p>
-          <p class="text-sm mb-1 text-color-5"><strong>Email:</strong> <?= $e['email'] ?></p>
-          <p class="text-sm mb-1 text-color-5"><strong>Teléfono:</strong> <?= $e['telefono'] ?></p>
-          <p class="mt-3 text-sm <?= $e['verificada'] ? 'text-green-600' : 'text-red-600' ?>">
-            <?= $e['verificada'] ? 'Verificada' : 'No verificada' ?>
-          </p>
-          <a href="#" class="mt-4 inline-block bg-color-4 text-color-1 px-4 py-2 rounded">Ver Convocatorias</a>
-        </div>
-        <?php endforeach; ?>
+     <section class="relative text-color-5 text-center h-[500px] bg-cover bg-center bg-fixed"
+      style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('http://localhost:8080/img/inicio2.png');">
+      <div class="relative z-10 px-4 pt-32 flex flex-col justify-center h-full">
+        <h2 class="text-4xl sm:text-5xl font-bold mb-4">Seccion de Empresas</h2>
+        <p class="mb-6 text-color-5">
+          Encuentra mejores oportunidades de prácticas profesionales y conoces las empresas con las que tenemos convenios.
+        </p>
+        <a href="/empresa/panel" class="text-color-1 font-bold py-3 px-6 rounded-lg">
+          Explorar Empresas
+        </a>
       </div>
     </section>
+    <section id="empresas" class="py-12 bg-color-5">
+      <div class="px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <?php foreach($empresa as $e): ?>
+          <div class="bg-color-2 p-4 rounded-lg shadow-md hover-shadow-md">
+        <?php if(!empty($e['imagen'])): ?>
+          <img src="/img/empresa/<?= $e['imagen'] ?>" alt="<?= $e['nombre_empresa'] ?>" class="w-full h-48 object-cover rounded mb-4">
+        <?php else: ?>
+          <div class="w-full h-48 bg-color-1 mb-4 flex items-center justify-center text-gray-300 rounded">Sin imagen</div>
+        <?php endif; ?>
+        <h3 class="text-lg font-bold mb-2 text-color-4"><?= $e['nombre_empresa'] ?></h3>
+        <p class="text-sm mb-1 text-color-5"><strong>Rubro:</strong> <?= $e['rubro'] ?></p>
+        <p class="text-sm mb-1 text-color-5"><strong>Dirección:</strong> <?= $e['direccion'] ?></p>
+        <a href="/empresa/panel" class="mt-4 inline-block bg-color-4 text-color-1 px-4 py-2 rounded">Información</a>
+
+      </div>
+      <?php endforeach; ?>
+    </div>
+
+    </section>
+
+
+
+
 
     <!-- Información de apoyo -->
     <section class="py-12 bg-color-5 text-color-1">
@@ -106,28 +119,30 @@
       <div class="px-6 grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="bg-color-5 p-4 rounded-lg shadow-md flex flex-col justify-between">
           <div>
-            <div class="h-32 bg-color-4 mb-4 flex items-center justify-center">📘</div>
-            <h4 class="font-bold mb-2">Guía definitiva para tu CV</h4>
+            <div class="h-32 bg-color-4 mb-4 flex items-center justify-center rounded bg-center bg-cover"
+                style="background-image: url('http://localhost:8080/img/guia.jpg')">
+            </div>           <h4 class="font-bold mb-2">Guía definitiva para tu CV</h4>
             <p class="text-sm text-gray-600 mb-4">Descripción de guía...</p>
           </div>
           <a href="#" class="bg-color-2 text-color-5 py-2 px-4 rounded text-center">Descargar PDF</a>
         </div>
 
         <div class="bg-color-5 p-4 rounded-lg shadow-md flex flex-col justify-between">
-          <div>
-            <div class="h-32 bg-color-4 mb-4 flex items-center justify-center">🎥</div>
-            <h4 class="font-bold mb-2">Nombre de Taller</h4>
+        <div>
+        <div class="h-32 bg-color-4 mb-4 flex items-center justify-center rounded bg-center bg-cover"
+                style="background-image: url('http://localhost:8080/img/taller.jpg')">
+            </div>        <h4 class="font-bold mb-2">Nombre de Taller</h4>
             <p class="text-sm text-gray-600 mb-4">Descripción de taller...</p>
           </div>
           <a href="#" class="bg-color-2 text-color-5 py-2 px-4 rounded text-center">Ver Video</a>
         </div>
 
         <div class="bg-color-5 p-4 rounded-lg shadow-md flex flex-col justify-between">
-          <div>
-            <div class="h-32 bg-color-4 mb-4 flex items-center justify-center">📑</div>
+            <div class="h-32 bg-color-4 mb-4 flex items-center justify-center rounded bg-center bg-cover"
+                style="background-image: url('http://localhost:8080/img/carta.jpg')">
+            </div>
             <h4 class="font-bold mb-2">Plantillas de Cartas de Presentación</h4>
             <p class="text-sm text-gray-600 mb-4">Información...</p>
-          </div>
           <a href="#" class="bg-color-2 text-color-5 py-2 px-4 rounded text-center">Ver</a>
         </div>
 

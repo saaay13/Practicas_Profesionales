@@ -40,9 +40,12 @@ class Postulacion extends ActivaModelo {
             $this->estado = EstadoPostulacion::EN_REVISION;
         }
     }
-// En Postulacion.php
 public static function listarAceptadas() {
-    $query = "SELECT * FROM " . static::$tabla . " WHERE estado = 'aceptada'";
+    $query = "SELECT p.id_postulacion, p.id_usuario, u.nombre, u.apellido
+              FROM " . static::$tabla . " p
+              JOIN usuario u ON p.id_usuario = u.id_usuario
+              WHERE p.estado = 'aceptada'";
+    
     $resultado = self::$db->query($query);
     $datos = [];
     if ($resultado) {

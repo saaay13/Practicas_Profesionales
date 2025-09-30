@@ -75,11 +75,11 @@ if (session_status() === PHP_SESSION_NONE) {
                         <td class="p-4"><?= $u['telefono'] ?></td>
                         <td class="p-4 font-semibold text-color-2"><?= $u['nombre_rol'] ?></td>
                         <td class="p-4 text-center flex gap-2 justify-center">
-                            <a href="/usuario/editar?id=<?= $u['id_usuario'] ?>" 
-                               class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
-                               Editar
+                            <a href="/usuario/editar?id_usuario=<?= $u['id_usuario'] ?>" 
+                            class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
+                            Editar
                             </a>
-                            <a href="/usuario/eliminar?id=<?= $u['id_usuario'] ?>" 
+                            <a href="/usuario/eliminar?id_usuario=<?= $u['id_usuario'] ?>" 
                                class="px-3 py-1 bg-red-600 text-color-5 rounded-md hover:bg-red-700 transition"
                                onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">
                                Eliminar

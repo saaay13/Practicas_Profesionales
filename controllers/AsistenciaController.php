@@ -88,13 +88,76 @@ foreach ($historial as $a) {
 }
 
 
-    // Actualizar horas_cumplidas en la práctica
     Practica::actualizarHorasCumplidas($id_practica, $totalHoras);
 
     $router->render('asistencia/historial', [
         'historial' => $historial,
         'totalHoras' => $totalHoras
     ]);
+}
+public static function Editar(Router $router) {
+    $id_asistencia = $_GET['id_asistencia'] ?? null;
+    if (!$id_asistencia) {
+        header('Location: /asistencia');
+        exit;
+    }
+
+    $asistencia = Asistencia::find($id_asistencia); 
+    if (!$asistencia) {
+        header('Location: /asistencia'); 
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === "POST") {
+        $data = $_POST['asistencia'];
+        $asistencia->sincronizar($data);
+        $resultado = $asistencia->actualizar();
+
+        if ($resultado) {
+            header('Location: /asistencia');
+            exit;
+        }
+    }
+
+    $usuarios = Usuario::listarConRol();
+    $usuariosFiltrados = array_filter($usuarios, fn($u) => strtolower($u['nombre_rol']) === 'empresa' || $u['id_rol'] == 2);
+
+    $router->render('asistencia/editar', [
+        'asistencia' => $asistencia,
+        'usuario' => $usuariosFiltrados
+    ]);
+}
+
+public static function Eliminar(Router $router) {
+    $id_asistencia = $_GET['id_asistencia'] ?? null;
+    if (!$id_asistencia) {
+        header('Location: /asistencia');
+        exit;
+    }
+
+    $asistencia = Asistencia::find($id_asistencia);
+    if (!$asistencia) {
+        header('Location: /asistencia');
+        exit;
+    }
+
+    try {
+        $eliminado = $asistencia->eliminar();
+
+        if ($eliminado) {
+            $_SESSION['mensaje'] = "asistencia eliminada correctamente";
+            header('Location: /asistencia');
+            exit;
+        } else {
+            $_SESSION['error'] = "No se pudo eliminar la asistencia";
+            header('Location: /asistencia');
+            exit;
+        }
+    } catch (\Exception $e) {
+        $_SESSION['error'] = "Error al eliminar lso otros: " . $e->getMessage();
+        header('Location: /asistencia');
+        exit;
+    }
 }
 
 

@@ -67,19 +67,20 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         <td class="p-4"><?= $c['fecha_publicacion'] ?></td>
                         <td class="p-4"><?= $c['fecha_cierre'] ?></td>
                         <td class="p-4"><?= ucfirst($c['estado']) ?></td>
-                        <td class="p-4">
+                        <td class="p-4 text-center">
                             <?php if (!empty($c['imagen'])): ?>
-                                <img src="/img/<?= $c['imagen'] ?>" class="h-16 w-16 object-cover rounded-md mx-auto">
+                                <img src="/img/convocatoria/<?= $c['imagen'] ?>" class="h-16 w-16 object-cover rounded-md mx-auto">
                             <?php else: ?>
                                 Sin imagen
                             <?php endif; ?>
+
                         </td>
                         <td class="p-4 text-center flex gap-2 justify-center">
-                            <a href="/convocatoria/editar?id=<?= $c['id_convocatoria'] ?>" 
+                            <a href="/convocatoria/editar?id_convocatoria=<?= $c['id_convocatoria'] ?>" 
                                class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
                                Editar
                             </a>
-                            <a href="/convocatoria/eliminar?id=<?= $c['id_convocatoria'] ?>" 
+                            <a href="/convocatoria/eliminar?id_convocatoria=<?= $c['id_convocatoria'] ?>" 
                                class="px-3 py-1 bg-red-600 text-color-5 rounded-md hover:bg-red-700 transition"
                                onclick="return confirm('¿Seguro que deseas eliminar esta convocatoria?')">
                                Eliminar

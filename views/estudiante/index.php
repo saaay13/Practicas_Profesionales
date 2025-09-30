@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -56,7 +61,7 @@
                 <td class="border-b p-3"><?= $e['semestre'] ?></td>
                 <td class="border-b p-3"><?= $e['matricula'] ?></td>
                 <td class="border-b p-3 text-center flex gap-2 justify-center">
-                    <a href="/estudiante/editar?id=<?= $e['id_estudiante'] ?>" 
+                    <a href="/estudiante/editar?id_estudiante=<?= $e['id_estudiante'] ?>" 
                        class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
                        Editar
                     </a>

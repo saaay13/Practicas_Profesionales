@@ -75,13 +75,13 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         <td class="p-4 text-center"><?= $e['verificada'] ? 'Sí' : 'No' ?></td>
                         <td class="p-4 text-center">
                             <?php if (!empty($e['imagen'])): ?>
-                                <img src="/img/<?= $e['imagen'] ?>" class="h-16 w-16 object-cover rounded-md mx-auto">
+<img src="/img/empresa/<?= $e['imagen'] ?>" class="h-16 w-16 object-cover rounded-md mx-auto">
                             <?php else: ?>
                                 Sin imagen
                             <?php endif; ?>
                         </td>
                         <td class="p-4 text-center flex gap-2 justify-center">
-                            <a href="/empresa/editar?id=<?= $e['id_empresa'] ?>" 
+                            <a href="/empresa/editar?id_empresa=<?= $e['id_empresa'] ?>" 
                                class="px-3 py-1 bg-color-4 text-color-1 rounded-md hover:bg-color-2 hover:text-color-5 transition">
                                Editar
                             </a>

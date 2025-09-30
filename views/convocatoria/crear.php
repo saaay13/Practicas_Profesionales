@@ -86,11 +86,11 @@ if (session_status() === PHP_SESSION_NONE) {
             </select>
         </div>
 
-        <div>
-            <label for="imagen" class="block font-medium mb-1 text-color-2">Imagen:</label>
-            <input type="file" id="imagen" name="convocatoria[imagen]" accept="image/*"
-                   class="w-full border border-color-3 rounded px-3 py-2 bg-color-5 text-color-1">
-        </div>
+         <div>
+                <label for="imagen" class="block font-medium mb-1">Imagen:</label>
+                <input type="file" id="imagen" name="imagen" accept="image/*" required
+                       class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
 
         <div class="md:col-span-2">
             <button type="submit"
